@@ -13,7 +13,25 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  
+  'menu.insert'(text, price) {
+    // Make sure the user is logged in before inserting a task
+    if (! this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+    check(text, String);
+    check(price, String);
+
+    if (Menu.findOne({text: text})) {
+        throw new Meteor.Error('Such item exist already');
+    }
+
+    Menu.insert({
+      text,
+      price,
+      createdAt: new Date(),      
+    });
+},
+
 'menu.remove'(menuId) {
 	check(menuId, String);
 
@@ -26,21 +44,7 @@ Meteor.methods({
   Menu.remove(menuId);
 },
 
-'menu.insert'(text, price) {
-    check(text, String);
-    check(price, String);
 
-    // Make sure the user is logged in before inserting a task
-    if (! this.userId) {
-      throw new Meteor.Error('not-authorized');
-    }
-
-    Menu.insert({
-      text,
-      price,
-      createdAt: new Date(),      
-    });
-},
 
 'menu.setAvailable'(menuId, setAvailable) {
 	check(menuId, String);

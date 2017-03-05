@@ -54,9 +54,10 @@ class App extends Component {
 	  <div className="container">
 		<header>
 		<AccountsUIWrapper />
-		  <h1>Todo List</h1>
+		  <h1>Pizza Day</h1>
 		</header>
 
+		{ this.props.currentUser ?
 		<form className="new-task" onSubmit={this.addMenuItem.bind(this)} >
             <input
             id="itemName"
@@ -80,14 +81,17 @@ class App extends Component {
             	type="submit" 
             	value="Add"
             />
-        </form>
-	  
 
+        </form> : ''
+		}
 
- 
+        { this.props.currentUser ?
 		<ul>
 		  {this.renderMenu()}
-		</ul>
+		</ul> : ''
+		}
+	
+
 	  </div>
 	);
   }
