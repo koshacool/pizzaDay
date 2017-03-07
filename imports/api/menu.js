@@ -13,11 +13,15 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
+
+
+
   'menu.insert'(text, price) {
     // Make sure the user is logged in before inserting a task
     if (! this.userId) {
       throw new Meteor.Error('not-authorized');
     }
+    
     check(text, String);
     check(price, String);
 
@@ -28,7 +32,8 @@ Meteor.methods({
     Menu.insert({
       text,
       price,
-      createdAt: new Date(),      
+      createdAt: new Date(),     
+      available: true, 
     });
 },
 
@@ -51,10 +56,10 @@ Meteor.methods({
 	check(setAvailable, Boolean);
 
 	const item = Menu.findOne(menuId);
-    if (item.private && item.owner !== this.userId) {
-      // If the task is private, make sure only the owner can check it off
-      throw new Meteor.Error('not-authorized');
-    }
+    // if (item.private && item.owner !== this.userId) {
+    //   // If the task is private, make sure only the owner can check it off
+    //   throw new Meteor.Error('not-authorized');
+    // }
 
 	Menu.update(menuId, { $set: { available: setAvailable } });
 },

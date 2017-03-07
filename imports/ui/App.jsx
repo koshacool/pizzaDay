@@ -2,9 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
-
 import { Menu } from '../api/menu.js';
-
 import MenuItem from './MenuItem.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
@@ -20,6 +18,11 @@ class App extends Component {
 	  };
   }
 
+  nonEmptyInput (value) {   
+      return value.length > 0;    
+  }
+
+
  
   handleInputChange(event) {
 	// console.log(event.target.value);
@@ -34,6 +37,11 @@ class App extends Component {
 	// Find the text field via the React ref
 	const itemName = this.state.itemName;
 	const price = this.state.price;
+
+  if (!this.nonEmptyInput(itemName) || ! this.nonEmptyInput(price)) {
+    throw new Meteor.Error('Empty value');
+  }
+  
 	
    Meteor.call('menu.insert', itemName, price);	
 
@@ -55,8 +63,9 @@ class App extends Component {
 		<header>
 		<AccountsUIWrapper />
 		  <h1>Pizza Day</h1>
+      <button>Create Event</button>
 		</header>
-
+    <div className="contentBLock">
 		{ this.props.currentUser ?
 		<form className="new-task" onSubmit={this.addMenuItem.bind(this)} >
             <input
@@ -77,7 +86,10 @@ class App extends Component {
               onChange={this.handleInputChange.bind(this)}
             />
 
-            <input 
+            <input
+              className="addItem"
+              id="addItem"
+              name="addItem"
             	type="submit" 
             	value="Add"
             />
@@ -91,7 +103,7 @@ class App extends Component {
 		</ul> : ''
 		}
 	
-
+    </div>
 	  </div>
 	);
   }
