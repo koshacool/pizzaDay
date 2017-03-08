@@ -6,7 +6,7 @@ import classnames from 'classnames';
 export default class MenuItem extends Component {
   toggleAvailable() {   
     // Set the checked property to the opposite of its current value
-     Meteor.call('menu.setAvailable', this.props.menuItem._id, !this.props.menuItem.available);
+     Meteor.call('menu.setAvailable', this.props.menuItem._id, !this.props.menuItem.available[this.props.user._id]);
   }
 
   deleteThisItem() {
@@ -17,10 +17,16 @@ export default class MenuItem extends Component {
   render() {
     // Give tasks a different className when they are checked off,
     // so that we can style them nicely in CSS
+    // checkEvailable() {
+
+    // }
+
      const taskClassName = classnames({ 
-      unavailable: !this.props.menuItem.available,      
+      unavailable: (this.props.menuItem.available[this.props.user._id] === false),      
     });  
      
+     // console.log(this.props.menuItem);
+
     return (
       <li className={taskClassName}>
       <button className="delete" onClick={this.deleteThisItem.bind(this)}>
@@ -37,7 +43,7 @@ export default class MenuItem extends Component {
       }
 
         <button className="toggle-private" onClick={this.toggleAvailable.bind(this)}>
-            { this.props.menuItem.available ? 'UnAvailable' : 'Available' }
+            { this.props.menuItem.available[this.props.user._id] === false ? 'Available' : 'UnAvailable' }
           </button>
 
         <span className="text">

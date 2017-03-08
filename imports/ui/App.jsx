@@ -12,9 +12,10 @@ export default class App extends Component {
 		<header>		
     <AccountsUIWrapper />    
 		    <h1>Pizza Day</h1>
-        <button><Link to='/menu'>Create Event</Link></button>
-		  </header>
-      {this.props.children}
+		    <div className="buttons">
+        		<button><Link to='/event'>New Event</Link></button>        		
+        	</div>
+		</header>      
     </div>
 	 )
   }

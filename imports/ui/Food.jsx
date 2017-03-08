@@ -9,7 +9,6 @@ import { Link } from 'react-router'
 
 // App component - represents the whole app
 class Food extends Component {
-
   constructor(props) {
 	  super(props);
 
@@ -22,8 +21,6 @@ class Food extends Component {
   nonEmptyInput (value) {   
       return value.length > 0;    
   }
-
-
  
   handleInputChange(event) {
 	// console.log(event.target.value);
@@ -41,8 +38,7 @@ class Food extends Component {
 
   if (!this.nonEmptyInput(itemName) || ! this.nonEmptyInput(price)) {
     throw new Meteor.Error('Empty value');
-  }
-  
+  }  
 	
    Meteor.call('menu.insert', itemName, price);	
 
@@ -54,7 +50,7 @@ class Food extends Component {
 
  renderMenu() {  
   return this.props.menuItems.map((item) => (
-	  <MenuItem key={item._id} menuItem={item} />
+	  <MenuItem key={item._id} menuItem={item} user={this.props.currentUser} />
 	));
   }
  
@@ -62,8 +58,9 @@ class Food extends Component {
 	return (
 	  <div className="container">
 		<header>
-    <button><Link to='/'>Main</Link></button>
-      
+    <div className="buttons">
+      <button><Link to='/event'>Back</Link></button>
+     </div> 
 		</header>
     <div className="contentBLock">
 		{ this.props.currentUser ?
@@ -117,8 +114,7 @@ Food.propTypes = {
 };
 
 export default createContainer(() => {
-	Meteor.subscribe('menu');
-	
+	Meteor.subscribe('menu');	
 	return {
 	  menuItems: Menu.find({}, { sort: { createdAt: -1 } }).fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
