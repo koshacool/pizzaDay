@@ -13,7 +13,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'menu.insert'(text, price) {
+  'menu.insert'(text, price, eventId) {
 	// Make sure the user is logged in before inserting a task
 	if (!this.userId) {
 	  throw new Meteor.Error('not-authorized');
@@ -33,7 +33,7 @@ Meteor.methods({
 	  owner: this.userId,
 	  createdAt: new Date(),
 	  available: {
-		[this.userId]: true,        
+		[eventId]: true,        
 	  },
 	};
 
@@ -53,7 +53,7 @@ Meteor.methods({
   Menu.remove(menuId);
 },
 
-'menu.setAvailable'(menuId, setAvailable) {
+'menu.setAvailable'(menuId, eventId, setAvailable) {
   	check(menuId, String);
 	check(setAvailable, Boolean);
 	// const item = Menu.findOne(menuId);
@@ -63,7 +63,7 @@ Meteor.methods({
 	//   throw new Meteor.Error('not-authorized');
 	// }
 	
-	Menu.update(menuId, { $set: { ['available.' + this.userId]: setAvailable } });	
+	Menu.update(menuId, { $set: { ['available.' + eventId]: setAvailable } });	
 },
 
 

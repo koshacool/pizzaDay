@@ -36,7 +36,7 @@ class Food extends Component {
 			throw new Meteor.Error('Empty value');
 		}  
 
-		Meteor.call('menu.insert', itemName, price);
+		Meteor.call('menu.insert', itemName, price, this.props.eventId);
 
 		this.setState({
 			itemName: '',
@@ -46,9 +46,9 @@ class Food extends Component {
 		
 	}
 
-	renderMenu() {  
+	renderMenu() { 
 		return this.props.menuItems.map((item) => (
-			<MenuItem key={item._id} menuItem={item} user={this.props.currentUser} />
+			<MenuItem key={item._id} menuItem={item} eventId={this.props.eventId} />
 			));
 	}
 
@@ -104,7 +104,7 @@ class Food extends Component {
 Food.propTypes = {
 	menuItems: PropTypes.array.isRequired,
   // incompleteCount: PropTypes.number.isRequired,
-  currentUser: PropTypes.object,
+   currentUser: PropTypes.object,
 };
 
 export default createContainer(() => {

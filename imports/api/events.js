@@ -23,13 +23,24 @@ Meteor.methods({
 
 		let obj = {
 			text,	  
-			owner: this.userId,
+			owner: Meteor.user(),
 			createdAt: new Date(),
 			status: 'ordering',
 		};	
 
 		// return Events.insert(obj);
 		return Events.findOne({_id: Events.insert(obj)});
+	},
+
+	'events.remove'(eventId) {
+		check(eventId, String);
+
+		const event = Events.findOne(eventId);
+		if (event.private && item.owner !== this.userId) {
+	  		// If the task is private, make sure only the owner can delete it
+	 		 throw new Meteor.Error('not-authorized');
+  		}
+   		Events.remove(eventId);
 	},
 
 });

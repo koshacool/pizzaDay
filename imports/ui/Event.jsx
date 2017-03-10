@@ -24,17 +24,9 @@ class Event extends Component {
 		this._createEvent = this.createEvent.bind(this);
 	}
 
-	// changeState(name, value) {
-	// 	this.setState({
-	// 			name: value,
-	// 		});
-	// }
+	
 
-	// getInsertResult(res) {
-	// 	this.changeState(eventObj, result);
-	// }
-
-	createEvent(event) {			
+	createEvent(event) {		
 		event.preventDefault();
 		if (!nonEmptyInput(this.state.eventName)) {
 			throw new Meteor.Error('Empty value');
@@ -45,14 +37,11 @@ class Event extends Component {
 				eventObj: result,
 			});
 
-		});
-		
-
-		
+		});		
 	}
 
 	showFood() {
-		return (<Food />);
+		return (<Food eventId={this.state.eventObj._id} />);
 	}
 
 	showPeople() {

@@ -6,7 +6,7 @@ import classnames from 'classnames';
 export default class MenuItem extends Component {
   toggleAvailable() {   
     // Set the checked property to the opposite of its current value
-     Meteor.call('menu.setAvailable', this.props.menuItem._id, !this.props.menuItem.available[this.props.user._id]);
+     Meteor.call('menu.setAvailable', this.props.menuItem._id, this.props.eventId, !this.props.menuItem.available[this.props.eventId]);
   }
 
   deleteThisItem() {
@@ -22,7 +22,7 @@ export default class MenuItem extends Component {
     // }
 
      const taskClassName = classnames({ 
-      unavailable: (this.props.menuItem.available[this.props.user._id] === false),      
+      unavailable: (this.props.menuItem.available[this.props.eventId] === false),      
     });  
      
      // console.log(this.props.menuItem);
@@ -43,7 +43,7 @@ export default class MenuItem extends Component {
       }
 
         <button className="toggle-private" onClick={this.toggleAvailable.bind(this)}>
-            { this.props.menuItem.available[this.props.user._id] === false ? 'Available' : 'UnAvailable' }
+            { this.props.menuItem.available[this.props.eventId] === false ? 'Available' : 'UnAvailable' }
           </button>
 
         <span className="text">
@@ -58,5 +58,6 @@ MenuItem.propTypes = {
   // This component gets the task to display through a React prop.
   // We can use propTypes to indicate it is required
   menuItem: PropTypes.object.isRequired,
+  eventId: PropTypes.string.isRequired,
   // showPrivateButton: React.PropTypes.bool.isRequired,
 };
