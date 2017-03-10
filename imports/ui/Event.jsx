@@ -3,89 +3,145 @@ import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Link } from 'react-router';
-
+import {nonEmptyInput, handleInputChange} from './Helper/Helper.js';
 import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
+import Food from './Food.jsx';
+
 
 
 // App component - represents the whole app
 class Event extends Component {
+	constructor(props) {
+		super(props);	  
+		this.state = {
+			eventObj: false,
+			eventName: '',						
+			showAddPeople: false,
+			showAddMenu: false,		
+		};
 
-  constructor(props) {
-	  super(props);	  
-	  this.state = {
-		eventName: '',
-		menu: '',
-		
-	  };
-  }
-
-    addMenuItem(event) {	
-		event.preventDefault();
-
+		this._createEvent = this.createEvent.bind(this);
 	}
 
-	handleInputChange(event) {
-	// console.log(this.props.currentUser._id);
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
+	// changeState(name, value) {
+	// 	this.setState({
+	// 			name: value,
+	// 		});
+	// }
 
-  
-  render() {
-	return (
-	  <div className="container">
-		<header>
-	  		<div className="buttons">
-				<button><Link to='/'>Main</Link></button>       
-	   		</div>
-		</header>
+	// getInsertResult(res) {
+	// 	this.changeState(eventObj, result);
+	// }
 
-		<div className="contentBLock">	
-		<form className="new-task" onSubmit={this.addMenuItem.bind(this)} >
-            <input
-            id="eventName"
-            name="eventName"
-              type="text"     
-              value={this.state.eventName}        
-              placeholder="Type new event name"
-              onChange={this.handleInputChange.bind(this)}
-            />
-            <div className="buttons">
-        		<button><Link to='/people'>Add People</Link></button>    
-        		<button><Link to='/menu'>Add Food</Link></button>     		
-        	</div>	
-            <button
-              className="addEvent"
-              id="addEvent"
-              name="addEvent"
-            	type="submit"             	
-            >Create</button>
-        </form> 
-        { this.state.menu ?
-        	<p>total products: {this.state.menu} </p> : ''
-    	}
-        	
-        </div>
-	  </div>
-	);
-  }
+	createEvent(event) {			
+		event.preventDefault();
+		if (!nonEmptyInput(this.state.eventName)) {
+			throw new Meteor.Error('Empty value');
+		}
+
+		Meteor.call('events.insert', this.state.eventName , (err, result) => {			
+			this.setState({
+				eventObj: result,
+			});
+
+		});
+		
+
+		
+	}
+
+	showFood() {
+		return (<Food />);
+	}
+
+	showPeople() {
+		return (<People />);
+	}
+
+	render() {
+		return (
+			<div className="container">
+
+			<header>
+			<div className="buttons">
+			<button><Link to='/'>Main</Link></button>       
+			</div>
+			</header>
+
+			<div className="contentBLock">	
+			{ this.state.eventObj  ? 
+			
+			<div className="buttons">
+				<h3>{ this.state.eventName }</h3> 
+				<button onClick={ (event) => {this.setState( {showAddPeople: !this.state.showAddPeople} )} }>
+					Add People
+				</button> 
+				<button onClick={ (event) => {this.setState( {showAddMenu: !this.state.showAddMenu} )} }>
+					Add Food
+				</button> 
+			</div>
+				:
+
+			
+			<form className="new-task" onSubmit={this._createEvent} >
+			<input
+			id="eventName"
+			name="eventName"
+			type="text"     
+			value={this.state.eventName}        
+			placeholder="Type new event name"
+			onChange={ handleInputChange.bind(this) }
+			/>
+
+			<div className="buttons">
+
+			<button			
+			className="addEvent"
+			id="addEvent"
+			name="addEvent"
+			type="submit">
+			Create
+			</button>
+
+			</div>	
+			</form> 
+				
+			}
+
+			
+
+			
+
+			
+
+			</div>
+
+			<div>	
+				{ this.state.showAddMenu ? this.showFood() : '' } 
+			</div>
+
+			</div>
+
+
+
+			);
+	}
 
 };
 
 Event.propTypes = {
-  menuItems: PropTypes.array.isRequired,
+	events: PropTypes.array.isRequired,
   // incompleteCount: PropTypes.number.isRequired,
   currentUser: PropTypes.object,
 };
 
 export default createContainer(() => {
-	Meteor.subscribe('menu');
+	Meteor.subscribe('events');
 	
 	return {
-	  menuItems: Menu.find({}, { sort: { createdAt: -1 } }).fetch(),
+		events: Menu.find({}, { sort: { createdAt: -1 } }).fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
-	  currentUser: Meteor.user(),
-  };
+	  	currentUser: Meteor.user(),
+	};
 }, Event);

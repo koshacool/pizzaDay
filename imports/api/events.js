@@ -10,5 +10,26 @@ if (Meteor.isServer) {
   Meteor.publish('events', function eventPublication() {
   	return Events.find();
   });
+
 }
 
+Meteor.methods({
+	'events.insert'(text) {
+		check(text, String);
+		// Make sure the user is logged in before inserting a task
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}	 
+
+		let obj = {
+			text,	  
+			owner: this.userId,
+			createdAt: new Date(),
+			status: 'ordering',
+		};	
+
+		// return Events.insert(obj);
+		return Events.findOne({_id: Events.insert(obj)});
+	},
+
+});

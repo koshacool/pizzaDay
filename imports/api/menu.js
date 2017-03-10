@@ -27,7 +27,7 @@ Meteor.methods({
 	}
 
 
-	Menu.insert({
+	let obj = {
 	  text,
 	  price,
 	  owner: this.userId,
@@ -35,7 +35,10 @@ Meteor.methods({
 	  available: {
 		[this.userId]: true,        
 	  },
-	});
+	};
+
+	Menu.insert(obj);
+
 },
 
 'menu.remove'(menuId) {
