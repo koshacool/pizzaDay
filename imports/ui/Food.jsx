@@ -2,10 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
-import { Menu } from '../api/menu.js';
-import MenuItem from './MenuItem.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
-import { Link } from 'react-router'
+import { Link } from 'react-router';
+
+import { Menu } from '../api/menu.js';
+import MenuItem from './Components/MenuItem.jsx';
+
 
 // App component - represents the whole app
 class Food extends Component {
