@@ -8,7 +8,7 @@ import { Link } from 'react-router';
 import { Menu } from '../api/menu.js';
 import MenuItem from './Components/MenuItem.jsx';
 import {nonEmptyInput, handleInputChange} from './Helper/Helper.js';
-import Event from './Event.jsx';
+// import Event from './Event.jsx';
 
 
 // App component - represents the whole app

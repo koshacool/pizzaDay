@@ -11,7 +11,7 @@ import Food from './Food.jsx';
 
 
 // App component - represents the whole app
-class Event extends Component {
+class EventNew extends Component {
 	constructor(props) {
 		super(props);	  
 		this.state = {
@@ -119,7 +119,7 @@ class Event extends Component {
 
 };
 
-Event.propTypes = {
+EventNew.propTypes = {
 	events: PropTypes.array.isRequired,
   // incompleteCount: PropTypes.number.isRequired,
   currentUser: PropTypes.object,
@@ -133,4 +133,4 @@ export default createContainer(() => {
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
 	  	currentUser: Meteor.user(),
 	};
-}, Event);
+}, EventNew);

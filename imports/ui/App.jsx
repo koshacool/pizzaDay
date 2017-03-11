@@ -56,8 +56,11 @@ App.propTypes = {
 
 export default createContainer(() => {
 	Meteor.subscribe('events');	
-	return {
-		events: Events.find({}, { sort: { createdAt: -1 } }).fetch(),
+			
+	return {	
+		events: Events.find({ $or: [ { 'owner._id': Meteor.userId() }, 
+			{ ['available.' + Meteor.userId()]: true } ] }, 
+			{ sort: { createdAt: -1 } }).fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
 	   currentUser: Meteor.user(),
 	};
