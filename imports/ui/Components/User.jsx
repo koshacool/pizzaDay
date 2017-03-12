@@ -1,59 +1,65 @@
 import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import classnames from 'classnames';
+import { createContainer } from 'meteor/react-meteor-data';
+import { Events } from '../../api/events.js';
 
 // Task component - represents a single todo item
 export default class User extends Component {
-  	toggleAvailable() { 
-  		let available = !this.checkEvailable();
-		// Set the checked property to the opposite of its current value
-		Meteor.users.update(this.props.currentUser._id, { $set: { ['available.' + this.props.eventId]: available } });	
 
-	 	
-  	}
+	constructor(props) {
+		super(props);
+		Meteor.subscribe('events'); 
 
-  	checkEvailable() {
-  		let available = true;
-  		let param = this.props.currentUser.available;
-  		if (param) {
-  			if (param[this.props.eventId] === false) {
-  				available = false;
-  			}
-  		} 		
+		this.state = {			
+			available: this.checkAvailable(),
+		};
+	}
 
-  		return available;
-  	}
+	checkAvailable() {
+		let status = false;
+		if (this.props.event.available.users[this.props.currentUser._id]) {
+			status = true;
+		}
+		return status;
+	}
+	
+	toggleAvailable() { 
+		Meteor.call('events.userAvailable', this.props.currentUser._id, this.props.event._id, !this.state.available);				
+		this.setState({
+			available: !this.state.available,
+		});
+				
+	}
 
-
-  render() {
-	// Give tasks a different className when they are checked off,
-	// so that we can style them nicely in CSS
-
-	 const taskClassName = classnames({ 
-	  // unavailable: (this.props.menuItem.available[this.props.eventId] === false),      
-	});   
+	render() {
+		const taskClassName = classnames({ 
+	  		unavailable: !this.state.available,      
+		});   
 	
 
-	return (
-	  <li className={taskClassName}>	
+		return (
+	  		<li className={taskClassName}>
+	  		<a 	>{this.state.available}</a>
+	  			{ this.props.currentUser._id != Meteor.userId() ? 
+	  				<button className="toggle-private" onClick={this.toggleAvailable.bind(this)}>
+						{ !this.state.available ? 'Available' : 'UnAvailable' }
+					</button>
+	  			: '' }
+				
 
-
-		<button className="toggle-private" onClick={this.toggleAvailable.bind(this)}>
-			{ this.checkEvailable() ? 'Available' : 'UnAvailable' }
-		</button>
-
-		<span className="text">
-		  <strong>aaa</strong>
-		</span>        
-	  </li>
-	);
-  }
+				<span className="text">
+		  			<strong>{ this.props.currentUser.username }</strong>
+				</span>        
+	  		</li>
+		);
+  	}
 }
 
 User.propTypes = {
   // This component gets the task to display through a React prop.
   // We can use propTypes to indicate it is required
   currentUser: PropTypes.object.isRequired,
-  eventId: PropTypes.string.isRequired,
+  event: PropTypes.object.isRequired,
   // showPrivateButton: React.PropTypes.bool.isRequired,
 };

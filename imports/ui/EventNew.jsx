@@ -50,6 +50,16 @@ class EventNew extends Component {
 		});			
 	}
 
+	countEvailableItems(object) {
+		var counter = 0;
+		for (let key in object) {
+			if (object[key]) {
+				counter++;
+			}
+		}
+		return counter;
+	}
+
 	countFood() {
 		return Menu.find({['available.' + this.state.eventObj._id]: { $ne: false }}).count();
 	}
@@ -59,7 +69,7 @@ class EventNew extends Component {
 	}
 
 	showPeople() {		
-		return (<People eventId={this.state.eventObj._id} />);
+		return (<People event={this.state.eventObj} />);
 	}
 
 	render() {
@@ -82,7 +92,7 @@ class EventNew extends Component {
 							</button>
 						</h2>						 
 						 <h3>
-							<strong>Total people: </strong> { this.props.usersCount }							
+							<strong>Total people: </strong> { this.countEvailableItems(this.state.eventObj.available.users) }							
 							<button onClick={ (event) => {this.setState({
 								showAddPeople: !this.state.showAddPeople,
 								showAddMenu: false,
@@ -141,7 +151,7 @@ EventNew.propTypes = {
 	// events: PropTypes.array.isRequired,
   // incompleteCount: PropTypes.number.isRequired,
   currentUser: PropTypes.object,
-  usersCount: PropTypes.number.isRequired,
+  // countUsers: PropTypes.number.isRequired,
 };
 
 export default createContainer(() => {
@@ -150,7 +160,7 @@ export default createContainer(() => {
 	Meteor.subscribe('usersList'); 
 	
 	return {
-		usersCount: Meteor.users.find().count(),
+		// countUsers: Meteor.users.find().count(),
 		// events: Menu.find({}, { sort: { createdAt: -1 } }).fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
 	  	currentUser: Meteor.user(),

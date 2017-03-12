@@ -20,7 +20,7 @@ export default class MenuItem extends Component {
 	// so that we can style them nicely in CSS
 
 	 const taskClassName = classnames({ 
-	  unavailable: (this.props.menuItem.available[this.props.eventId] === false),      
+	  	unavailable: (this.props.menuItem.available[this.props.eventId] === false),      
 	});  
 	 
 	 // console.log(this.props.menuItem);

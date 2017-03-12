@@ -17,7 +17,7 @@ class People extends Component {
 
  renderUsers() {  
   return this.props.users.map((user) => (
-	  <User key={user._id} currentUser={this.props.currentUser} eventId={this.props.eventId}/>
+	  <User key={user._id} currentUser={user} event={this.props.event}/>
 	));
   }
 
@@ -40,13 +40,14 @@ class People extends Component {
 
 People.propTypes = {
   users: PropTypes.array.isRequired,
+  event: PropTypes.object.isRequired,
   // incompleteCount: PropTypes.number.isRequired,
   currentUser: PropTypes.object,
 };
 
-export default createContainer(() => {
+export default createContainer(function() {
 	Meteor.subscribe('usersList');
-
+	
 	return {
 	  users: Meteor.users.find().fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
