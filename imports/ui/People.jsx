@@ -17,28 +17,21 @@ class People extends Component {
 
  renderUsers() {  
   return this.props.users.map((user) => (
-	  <User key={user._id} user={user} currentUser={this.props.currentUser} />
+	  <User key={user._id} currentUser={this.props.currentUser} eventId={this.props.eventId}/>
 	));
   }
- 
+
   render() {
 	return (
 	  <div className="container">
-		<header>
-    <div className="buttons">
-      <button><Link to='/event'>Back</Link></button>
-     </div> 
-		</header>
-    <div className="contentBLock">
-		
-
-        { this.props.currentUser ?
-		<ul>
-		  {this.renderUsers()}
-		</ul> : ''
-		}
-	
-    </div>
+		<div className="contentBLock">
+        	{ this.props.currentUser ?
+				<ul>
+		  			{this.renderUsers()}
+				</ul> 
+			: ''
+			}	
+    	</div>
 	  </div>
 	);
   }

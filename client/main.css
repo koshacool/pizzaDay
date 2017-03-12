@@ -183,3 +183,6 @@ form .buttons {
 a {
   text-decoration: none;
 }
+.edit {
+  float: right;
+}

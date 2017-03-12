@@ -23,7 +23,11 @@ Meteor.methods({
 
 		let obj = {
 			text,	  
-			owner: Meteor.user(),
+			owner: {
+				_id: Meteor.userId(),
+				username: Meteor.user().username,
+
+			},
 			createdAt: new Date(),
 			status: 'ordering',
 		};	
@@ -36,11 +40,24 @@ Meteor.methods({
 		check(eventId, String);
 
 		const event = Events.findOne(eventId);
-		if (event.private && item.owner !== this.userId) {
+		console.log(this.userId);
+		if (event.owner._id !== this.userId) {
 	  		// If the task is private, make sure only the owner can delete it
 	 		 throw new Meteor.Error('not-authorized');
   		}
    		Events.remove(eventId);
 	},
 
+	'events.findById'(eventId) {
+		check(eventId, String);
+
+		const event = Events.findOne(eventId);
+		if (event.owner._id !== this.userId) {
+	  		// If the task is private, make sure only the owner can delete it
+	 		 throw new Meteor.Error('You haven\'t access to this event');
+  		}
+   		return event;
+	},
+
+	
 });

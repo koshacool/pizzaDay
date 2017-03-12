@@ -39,7 +39,7 @@ class App extends Component {
 
 			<div className="container">
 				<div className="contentBLock">  
-				{ this.renderEvents() }
+					{ this.renderEvents() }
 				</div>
 			</div>
     	</div>

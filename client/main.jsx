@@ -18,9 +18,9 @@ Meteor.startup(() => {
   	<Router history={browserHistory}>
   		
     	<Route path='/' component={App} />
-    	<Route path='/event' component={EventNew}>  
-    		
-    	</Route>    		
+    	<Route path='/event' component={EventNew} />  
+    	<Route path='/event/:event' component={EventNew} />	
+    
     		
     	<Route path='/menu' component={Food} /> 
       <Route path='/people' component={People} />
