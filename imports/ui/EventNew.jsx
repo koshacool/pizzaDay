@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Link } from 'react-router';
-import {nonEmptyInput, handleInputChange} from './Helper/Helper.js';
+import {Helper} from './Helper/Helper.js';
 import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
 import Food from './Food.jsx';
@@ -30,7 +30,7 @@ class EventNew extends Component {
 
 	createEvent(event) {		
 		event.preventDefault();
-		if (!nonEmptyInput(this.state.eventName)) {
+		if (!Helper.nonEmptyInput(this.state.eventName)) {
 			throw new Meteor.Error('Empty value');
 		}
 
@@ -50,22 +50,14 @@ class EventNew extends Component {
 		});			
 	}
 
-	countEvailableItems(object) {
-		var counter = 0;
-		for (let key in object) {
-			if (object[key]) {
-				counter++;
-			}
-		}
-		return counter;
-	}
+	
 
 	countFood() {
 		return Menu.find({['available.' + this.state.eventObj._id]: { $ne: false }}).count();
 	}
 
 	showFood() {		
-		return (<Food eventId={this.state.eventObj._id} />);
+		return (<Food event={this.state.eventObj} />);
 	}
 
 	showPeople() {		
@@ -92,7 +84,7 @@ class EventNew extends Component {
 							</button>
 						</h2>						 
 						 <h3>
-							<strong>Total people: </strong> { this.countEvailableItems(this.state.eventObj.available.users) }							
+							<strong>Total people: </strong> { Helper.countEvailableItems(this.state.eventObj.available.users) }							
 							<button onClick={ (event) => {this.setState({
 								showAddPeople: !this.state.showAddPeople,
 								showAddMenu: false,
@@ -101,7 +93,7 @@ class EventNew extends Component {
 							</button>
 						</h3> 						
 						<h3>
-							<strong>Total food: </strong> { this.countFood() } 
+							<strong>Total food: </strong> { Helper.countEvailableItems(this.state.eventObj.available.food) } 
 							<button onClick={ (event) => {this.setState({
 								showAddMenu: !this.state.showAddMenu,
 								showAddPeople: false,
@@ -119,7 +111,7 @@ class EventNew extends Component {
 							type="text"     
 							value={this.state.eventName}        
 							placeholder="Type new event name"
-							onChange={ handleInputChange.bind(this) }
+							onChange={ Helper.handleInputChange.bind(this) }
 						/>
 
 						<div className="buttons">

@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 
 import { Menu } from '../api/menu.js';
 import MenuItem from './Components/MenuItem.jsx';
-import {nonEmptyInput, handleInputChange} from './Helper/Helper.js';
+import {Helper} from './Helper/Helper.js';
 // import Event from './Event.jsx';
 
 
@@ -32,7 +32,7 @@ class Food extends Component {
 		const itemName = this.state.itemName;
 		const price = this.state.price;
 
-		if (!nonEmptyInput(itemName) || ! nonEmptyInput(price)) {
+		if (!Helper.nonEmptyInput(itemName) || ! Helper.nonEmptyInput(price)) {
 			throw new Meteor.Error('Empty value');
 		}  
 
@@ -48,7 +48,7 @@ class Food extends Component {
 
 	renderMenu() { 
 		return this.props.menuItems.map((item) => (
-			<MenuItem key={item._id} menuItem={item} eventId={this.props.eventId} />
+			<MenuItem key={item._id} menuItem={item} event={this.props.event} />
 			));
 	}
 
@@ -65,7 +65,7 @@ class Food extends Component {
 				type="text"     
 				value={this.state.itemName}        
 				placeholder="Type to add new menu item"
-				onChange={handleInputChange.bind(this)}
+				onChange={Helper.handleInputChange.bind(this)}
 				/>
 
 				<input
@@ -74,7 +74,7 @@ class Food extends Component {
 				type="text"     
 				value={this.state.price}        
 				placeholder="Type price"
-				onChange={handleInputChange.bind(this)}
+				onChange={Helper.handleInputChange.bind(this)}
 				/>
 
 				<input

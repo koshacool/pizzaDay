@@ -46,7 +46,7 @@ Meteor.methods({
 		check(eventId, String);
 
 		const event = Events.findOne(eventId);
-		console.log(this.userId);
+		// console.log(this.userId);
 		if (event.owner._id !== this.userId) {
 	  		// If the task is private, make sure only the owner can delete it
 	 		 throw new Meteor.Error('not-authorized');
@@ -77,6 +77,20 @@ Meteor.methods({
 		// }
 	
 		Events.update(eventId, { $set: { ['available.users.' + userId]: setAvailable } });	
+	},
+
+	'events.foodAvailable'(foodId, eventId, setAvailable) {
+  		check(foodId, String);
+  		check(eventId, String);
+		check(setAvailable, Boolean);
+		// const item = Menu.findOne(menuId);
+	
+		// if (item.private && item.owner !== this.userId) {
+		//   // If the task is private, make sure only the owner can check it off
+		//   throw new Meteor.Error('not-authorized');
+		// }
+	
+		Events.update(eventId, { $set: { ['available.food.' + foodId]: setAvailable } });	
 	},
 
 	

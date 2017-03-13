@@ -40,7 +40,7 @@ export default class User extends Component {
 
 		return (
 	  		<li className={taskClassName}>
-	  		<a 	>{this.state.available}</a>
+	  		
 	  			{ this.props.currentUser._id != Meteor.userId() ? 
 	  				<button className="toggle-private" onClick={this.toggleAvailable.bind(this)}>
 						{ !this.state.available ? 'Available' : 'UnAvailable' }

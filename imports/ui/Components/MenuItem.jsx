@@ -1,14 +1,34 @@
 import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import classnames from 'classnames';
+import { Events } from '../../api/events.js';
 
 // Task component - represents a single todo item
 export default class MenuItem extends Component {
+	constructor(props) {
+		super(props);
+		Meteor.subscribe('events'); 
+
+		this.state = {			
+			available: this.checkAvailable(),
+		};
+	}
+
   	toggleAvailable() { 
-  		let available = this.props.menuItem.available[this.props.eventId] === undefined ? false :  !this.props.menuItem.available[this.props.eventId]; 
-	// Set the checked property to the opposite of its current value
-	 Meteor.call('menu.setAvailable', this.props.menuItem._id, this.props.eventId, available);
-  }
+		Meteor.call('events.foodAvailable', this.props.menuItem._id, this.props.event._id, !this.state.available);				
+		this.setState({
+			available: !this.state.available,
+		});
+				
+	}
+
+	checkAvailable() {
+		let status = false;
+		if (this.props.event.available.food[this.props.menuItem._id]) {
+			status = true;
+		}
+		return status;
+	}
 
   deleteThisItem() {
 	 Meteor.call('menu.remove', this.props.menuItem._id);
@@ -20,7 +40,7 @@ export default class MenuItem extends Component {
 	// so that we can style them nicely in CSS
 
 	 const taskClassName = classnames({ 
-	  	unavailable: (this.props.menuItem.available[this.props.eventId] === false),      
+	  	unavailable: !this.state.available,      
 	});  
 	 
 	 // console.log(this.props.menuItem);
@@ -41,7 +61,7 @@ export default class MenuItem extends Component {
 	  }
 
 		<button className="toggle-private" onClick={this.toggleAvailable.bind(this)}>
-			{ this.props.menuItem.available[this.props.eventId] === false ? 'Available' : 'UnAvailable' }
+			{ !this.state.available ? 'Available' : 'UnAvailable' }
 		  </button>
 
 		<span className="text">
@@ -56,6 +76,6 @@ MenuItem.propTypes = {
   // This component gets the task to display through a React prop.
   // We can use propTypes to indicate it is required
   menuItem: PropTypes.object.isRequired,
-  eventId: PropTypes.string.isRequired,
+  event: PropTypes.object.isRequired,
   // showPrivateButton: React.PropTypes.bool.isRequired,
 };
