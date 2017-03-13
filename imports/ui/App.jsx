@@ -33,7 +33,9 @@ class App extends Component {
     			<AccountsUIWrapper />    
 		    	<h1>Pizza Day</h1>
 		    	<div className="buttons">
-        			<button><Link to='/event'>New Event</Link></button>        		
+        			<button>
+        				<Link to='/event'>New Event</Link>
+        			</button>        		
         		</div>
 			</header>    
 
@@ -58,8 +60,9 @@ export default createContainer(() => {
 	Meteor.subscribe('events');	
 			
 	return {	
-		events: Events.find({ $or: [ { 'owner._id': Meteor.userId() }, 
-			{ ['available.' + Meteor.userId()]: true } ] }, 
+		events: Events.find({ $or: [ 
+			{ 'owner._id': Meteor.userId() }, 
+			{ ['available.users.' + Meteor.userId()]: true } ] }, 
 			{ sort: { createdAt: -1 } }).fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
 	   currentUser: Meteor.user(),

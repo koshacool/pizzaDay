@@ -33,9 +33,7 @@ class Event extends Component {
 
 	return (
 	  <li className={eventClassName}>
-	  	<button className="delete" onClick={this.deleteThisEvent.bind(this)}>
-		  &times;
-		</button>
+	  	
 
 		<span className="text">
 		  <strong>{this.props.event.owner.username}</strong>: {this.props.event.text},
@@ -47,12 +45,19 @@ class Event extends Component {
 		  <strong>Food</strong>: {Helper.countEvailableItems(this.props.event.available.food)}
 		</span>    
 
+		<div className="divInline">
+			<Link to={"/event/order/" + this.props.event._id} > ORDER </Link>  
+		</div>
 		{ this.props.event.owner._id == Meteor.userId() ?
-
-			<button className="edit">
-        		<Link to={"/event/" + this.props.event._id} > Edit</Link>
-        	</button>
-
+			<div className="divInline">
+				<button className="delete" onClick={this.deleteThisEvent.bind(this)}>
+		 		 	&times;
+				</button>
+				<button className="edit">
+        			<Link to={"/event/" + this.props.event._id} > Edit</Link>
+        		</button>
+        		
+			</div>
         	: ''
 		}
         	        		
