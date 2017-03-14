@@ -22,9 +22,6 @@ class Food extends Component {
 		};
 	}
 
-
-
-
 	addMenuItem(event) {	
 		event.preventDefault();
 
@@ -36,14 +33,12 @@ class Food extends Component {
 			throw new Meteor.Error('Empty value');
 		}  
 
-		Meteor.call('menu.insert', itemName, price, this.props.eventId);
+		Meteor.call('menu.insert', itemName, +price, this.props.eventId);
 
 		this.setState({
 			itemName: '',
 			price: '',
-		}); 
-
-		
+		}); 		
 	}
 
 	renderMenu() { 
@@ -59,31 +54,41 @@ class Food extends Component {
 			<div className="contentBLock">
 			{ this.props.currentUser ?
 				<form className="new-task" onSubmit={this.addMenuItem.bind(this)} >
-				<input
-				id="itemName"
-				name="itemName"
-				type="text"     
-				value={this.state.itemName}        
-				placeholder="Type to add new menu item"
-				onChange={Helper.handleInputChange.bind(this)}
-				/>
+					<div>
+					Name: <input
+						id="itemName"
+						name="itemName"
+						type="text"     
+						value={this.state.itemName}        
+						placeholder="Type to add new menu item"
+						required						
+						onChange={Helper.handleInputChange.bind(this)}
 
-				<input
-				id="price"
-				name="price"
-				type="text"     
-				value={this.state.price}        
-				placeholder="Type price"
-				onChange={Helper.handleInputChange.bind(this)}
-				/>
+					/> 
+					</div>
+					
+					<div>
+					Price: <input
+						id="price"
+						name="price"
+						type="text"     
+						value={this.state.price}        
+						placeholder="Type price"
+						required
+						type="text"
+						pattern="\d+"
+						
+						onChange={Helper.handleInputChange.bind(this)}
+					/>
+					</div>
 
-				<input
-				className="addItem"
-				id="addItem"
-				name="addItem"
-				type="submit" 
-				value="Add"
-				/>
+					<input
+						className="addItem"
+						id="addItem"
+						name="addItem"
+						type="submit" 
+						value="Add"
+					/>
 
 				</form> : ''
 			}
