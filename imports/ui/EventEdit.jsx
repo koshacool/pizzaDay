@@ -2,13 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import {Helper} from './Helper/Helper.js';
 import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-
+import Header from './Header.jsx';
 
 
 // App component - represents the whole app
@@ -16,30 +16,12 @@ class EventEdit extends Component {
 	constructor(props) {
 		super(props);	  
 		this.state = {
-			eventObj: false,
-			eventName: '',						
+			eventObj: false,								
 			showAddPeople: false,
 			showAddMenu: false,	
 		};
 
-		this._createEvent = this.createEvent.bind(this);
 		this.props.params.event ? this.getEventForEdit() : '';
-	}
-
-	
-
-	createEvent(event) {		
-		event.preventDefault();
-		if (!Helper.nonEmptyInput(this.state.eventName)) {
-			throw new Meteor.Error('Empty value');
-		}
-
-		Meteor.call('events.insert', this.state.eventName , (err, result) => {			
-			this.setState({
-				eventObj: result,
-			});
-
-		});		
 	}
 
 	getEventForEdit() {
@@ -50,12 +32,6 @@ class EventEdit extends Component {
 		});			
 	}
 
-	
-
-	countFood() {
-		return Menu.find({['available.' + this.state.eventObj._id]: { $ne: false }}).count();
-	}
-
 	showFood() {		
 		return (<Food event={this.state.eventObj} />);
 	}
@@ -64,54 +40,49 @@ class EventEdit extends Component {
 		return (<People event={this.state.eventObj} />);
 	}
 
-	render() {
-		
-		return (
+	render() {		
+		return (			
 			<div className="container">
-				<header>
-					<div className="buttons">
-						<button><Link to='/'>Main</Link></button>       
-					</div>
-				</header>
+				<Header /> 
 				
-				<div className="contentBLock">
-							
-					<div className="buttons">
-						<h2>
-							<strong>Event Name: </strong> { this.state.eventObj.text  } 
-							<button >
-								Change
-							</button>
-						</h2>						 
-						 <h3>
-							<strong>Total people: </strong> { Helper.countEvailableItems(this.state.eventObj.available.users) }							
-							<button onClick={ (event) => {this.setState({
-								showAddPeople: !this.state.showAddPeople,
-								showAddMenu: false,
-							}) } }>
-								Add People
-							</button>
-						</h3> 						
-						<h3>
-							<strong>Total food: </strong> { Helper.countEvailableItems(this.state.eventObj.available.food) } 
-							<button onClick={ (event) => {this.setState({
-								showAddMenu: !this.state.showAddMenu,
-								showAddPeople: false,
-							}) } }>
-								Add Food
-							</button> 
-						</h3> 						
+				{ this.state.eventObj ? 
+					<div className="contentBLock">							
+						<div className="buttons">
+							<h2>
+								<strong>Event Name: </strong> { this.state.eventObj.text  } 
+								<button >
+									Change
+								</button>
+							</h2>						 
+							<h3>
+								<strong>Total people: </strong> { Helper.countEvailableItems(this.state.eventObj.available.users) }						
+								<button onClick={ (event) => {
+									this.setState({
+										showAddPeople: !this.state.showAddPeople,
+										showAddMenu: false,
+									}) 
+								} }>
+									Add People
+								</button>
+							</h3> 						
+							<h3>
+								<strong>Total food: </strong> { Helper.countEvailableItems(this.state.eventObj.available.food) }
+								<button onClick={ (event) => {
+									this.setState({
+										showAddMenu: !this.state.showAddMenu,
+										showAddPeople: false,
+									}) } }>
+									Add Food
+								</button> 
+							</h3> 						
+						</div>					
+						<div>	
+							{ this.state.showAddMenu ? this.showFood() : '' } 
+							{ this.state.showAddPeople ? this.showPeople() : '' } 
+						</div>	
 					</div>
-					
-					<div>	
-						{ this.state.showAddMenu ? this.showFood() : '' } 
-						{ this.state.showAddPeople ? this.showPeople() : '' } 
-					</div>
-					
-
-				
-				</div>				
-			</div>
+				: '' }								
+			</div>	
 		);
 	}
 };

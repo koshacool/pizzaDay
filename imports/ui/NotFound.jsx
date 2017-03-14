@@ -4,9 +4,17 @@ import { Link } from 'react-router'
 export default class NotFound extends Component {
   render() {
     return (      
-      <div className='col-md-12'>
-        Page Not Found <Link to='/'>To mani Page</Link>?         
-      </div>
-      )
+    	<center className="notFoundBlock">
+    		<div className="notFoundBlock">        	
+            	<div >
+    	    		<h2 >Erorr: 404</h2>                	
+                	<span>
+        	    		Page Not Found 
+        	    		<Link to='/'> To Main Paig </Link>?  
+            		</span>
+            	</div>            	
+        	</div>    		
+    	</center> 
+    )
   }
 };
