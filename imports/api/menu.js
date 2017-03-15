@@ -20,8 +20,8 @@ Meteor.methods({
 	}
 	
 	check(text, String);
-	check(price, String);
-
+	check(price, Number);
+	
 	if (Menu.findOne({text: text})) {
 		throw new Meteor.Error('Such item exist already');
 	}

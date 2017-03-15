@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 
 import { Menu } from '../api/menu.js';
 import MenuItem from './Components/MenuItem.jsx';
-import {nonEmptyInput, handleInputChange} from './Helper/Helper.js';
+import {Helper} from './Helper/Helper.js';
 // import Event from './Event.jsx';
 
 
@@ -22,9 +22,6 @@ class Food extends Component {
 		};
 	}
 
-
-
-
 	addMenuItem(event) {	
 		event.preventDefault();
 
@@ -32,23 +29,21 @@ class Food extends Component {
 		const itemName = this.state.itemName;
 		const price = this.state.price;
 
-		if (!nonEmptyInput(itemName) || ! nonEmptyInput(price)) {
+		if (!Helper.nonEmptyInput(itemName) || ! Helper.nonEmptyInput(price)) {
 			throw new Meteor.Error('Empty value');
 		}  
 
-		Meteor.call('menu.insert', itemName, price, this.props.eventId);
+		Meteor.call('menu.insert', itemName, +price, this.props.eventId);
 
 		this.setState({
 			itemName: '',
 			price: '',
-		}); 
-
-		
+		}); 		
 	}
 
 	renderMenu() { 
 		return this.props.menuItems.map((item) => (
-			<MenuItem key={item._id} menuItem={item} eventId={this.props.eventId} />
+			<MenuItem key={item._id} menuItem={item} event={this.props.event} />
 			));
 	}
 
@@ -59,31 +54,41 @@ class Food extends Component {
 			<div className="contentBLock">
 			{ this.props.currentUser ?
 				<form className="new-task" onSubmit={this.addMenuItem.bind(this)} >
-				<input
-				id="itemName"
-				name="itemName"
-				type="text"     
-				value={this.state.itemName}        
-				placeholder="Type to add new menu item"
-				onChange={handleInputChange.bind(this)}
-				/>
+					<div>
+					Name: <input
+						id="itemName"
+						name="itemName"
+						type="text"     
+						value={this.state.itemName}        
+						placeholder="Type to add new menu item"
+						required						
+						onChange={Helper.handleInputChange.bind(this)}
 
-				<input
-				id="price"
-				name="price"
-				type="text"     
-				value={this.state.price}        
-				placeholder="Type price"
-				onChange={handleInputChange.bind(this)}
-				/>
+					/> 
+					</div>
+					
+					<div>
+					Price: <input
+						id="price"
+						name="price"
+						type="text"     
+						value={this.state.price}        
+						placeholder="Type price"
+						required
+						type="text"
+						pattern="\d+"
+						
+						onChange={Helper.handleInputChange.bind(this)}
+					/>
+					</div>
 
-				<input
-				className="addItem"
-				id="addItem"
-				name="addItem"
-				type="submit" 
-				value="Add"
-				/>
+					<input
+						className="addItem"
+						id="addItem"
+						name="addItem"
+						type="submit" 
+						value="Add"
+					/>
 
 				</form> : ''
 			}

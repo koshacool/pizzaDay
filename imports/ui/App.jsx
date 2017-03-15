@@ -7,6 +7,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 import { Events } from '../api/events.js';
 import Event from './Components/Event.jsx';
+import Header from './Header.jsx';
 
 // App component - represents the whole app
 class App extends Component { 
@@ -29,13 +30,7 @@ class App extends Component {
   render() {
 	return (
 	  	<div className="container">
-			<header>		
-    			<AccountsUIWrapper />    
-		    	<h1>Pizza Day</h1>
-		    	<div className="buttons">
-        			<button><Link to='/event'>New Event</Link></button>        		
-        		</div>
-			</header>    
+			<Header />   
 
 			<div className="container">
 				<div className="contentBLock">  
@@ -58,8 +53,9 @@ export default createContainer(() => {
 	Meteor.subscribe('events');	
 			
 	return {	
-		events: Events.find({ $or: [ { 'owner._id': Meteor.userId() }, 
-			{ ['available.' + Meteor.userId()]: true } ] }, 
+		events: Events.find({ $or: [ 
+			{ 'owner._id': Meteor.userId() }, 
+			{ ['available.users.' + Meteor.userId()]: true } ] }, 
 			{ sort: { createdAt: -1 } }).fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
 	   currentUser: Meteor.user(),
