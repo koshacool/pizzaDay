@@ -10,7 +10,7 @@ import Food from '../imports/ui/Food.jsx';
 import EventNew from '../imports/ui/EventNew.jsx';
 import EventEdit from '../imports/ui/EventEdit.jsx';
 import People from '../imports/ui/People.jsx';
-
+import Order from '../imports/ui/Order.jsx';
 
 
  
@@ -21,7 +21,7 @@ Meteor.startup(() => {
     	<Route path='/' component={App} />
     	<Route path='/event' component={EventNew} />  
     	<Route path='/event/:event' component={EventEdit} />	
-    
+      <Route path='/event/order/:event' component={Order} />  
     		
     	<Route path='/menu' component={Food} /> 
       <Route path='/people' component={People} />
