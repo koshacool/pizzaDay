@@ -34,31 +34,15 @@ export default class MenuItem extends Component {
 	 Meteor.call('menu.remove', this.props.menuItem._id);
   }
 
-
-  render() {
-	// Give tasks a different className when they are checked off,
-	// so that we can style them nicely in CSS
-
-	 const taskClassName = classnames({ 
+  editItem() {
+  	const taskClassName = classnames({ 
 	  	unavailable: !this.state.available,      
-	});  
-	 
-	 // console.log(this.props.menuItem);
-
-	return (
+	});
+  		return (
 	  <li className={taskClassName}>
 	  <button className="delete" onClick={this.deleteThisItem.bind(this)}>
 		  &times;
-		</button>
-
-		{ this.props.menuItem.available ?
-		<input
-		  type="checkbox"
-		  readOnly
-		  // checked={this.props.menuItem.available}
-		  // onClick={this.toggleAvailable.bind(this)}
-		/> : ''
-	  }
+		</button>		
 
 		<button className="toggle-private" onClick={this.toggleAvailable.bind(this)}>
 			{ !this.state.available ? 'Available' : 'UnAvailable' }
@@ -70,6 +54,40 @@ export default class MenuItem extends Component {
 	  </li>
 	);
   }
+
+  order() {
+  	return (
+	  <li>
+
+		
+		<input
+		  type="checkbox"
+		  readOnly
+		  // checked={this.props.menuItem.available}
+		  // onClick={this.toggleAvailable.bind(this)}
+		/> 		
+
+		<span className="text">
+		  <strong>{this.props.menuItem.text}</strong>: {this.props.menuItem.price} grn.
+		</span>        
+	  </li>
+	);	
+  }
+
+
+  render() {
+	// Give tasks a different className when they are checked off,
+	// so that we can style them nicely in CSS
+
+	console.log(this.props.order);
+	if (this.props.order) {
+		return this.order();
+	} else {
+		return this.editItem(); 
+	}
+	
+	
+  }
 }
 
 MenuItem.propTypes = {
@@ -77,5 +95,6 @@ MenuItem.propTypes = {
   // We can use propTypes to indicate it is required
   menuItem: PropTypes.object.isRequired,
   event: PropTypes.object.isRequired,
+
   // showPrivateButton: React.PropTypes.bool.isRequired,
 };
