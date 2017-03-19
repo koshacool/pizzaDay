@@ -18,6 +18,7 @@ class App extends Component {
 			price: '',
 		};
 	}
+	
 
 	renderEvents() { 
 		// console.log(this.props.events);
