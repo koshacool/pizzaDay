@@ -36,6 +36,7 @@ Meteor.methods({
 				},
 				food: {},
 			},
+			order: {},
 		};	
 
 		// return Events.insert(obj);
@@ -92,6 +93,21 @@ Meteor.methods({
 	
 		Events.update(eventId, { $set: { ['available.food.' + foodId]: setAvailable } });	
 	},
+
+	'events.order'(foodId, eventId, setOrdered) {
+  		check(foodId, String);
+  		check(eventId, String);
+		check(setOrdered, Boolean);
+		// const item = Menu.findOne(menuId);
+	
+		// if (item.private && item.owner !== this.userId) {
+		//   // If the task is private, make sure only the owner can check it off
+		//   throw new Meteor.Error('not-authorized');
+		// }
+	
+		Events.update(eventId, { $set: { ['order.' + Meteor.userId() + '.' + foodId]: setOrdered } });	
+	},
+
 
 	
 });

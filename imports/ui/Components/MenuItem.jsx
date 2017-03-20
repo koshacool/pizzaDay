@@ -11,6 +11,7 @@ export default class MenuItem extends Component {
 
 		this.state = {			
 			available: this.checkAvailable(),
+			ordered: this.checkOrdered(),
 		};
 	}
 
@@ -22,11 +23,28 @@ export default class MenuItem extends Component {
 				
 	}
 
+	toggleOrdered() { 
+		Meteor.call('events.order', this.props.menuItem._id, this.props.event._id, !this.state.ordered);				
+		this.setState({
+			ordered: !this.state.ordered,
+		});
+				
+	}
+
 	checkAvailable() {
 		let status = false;
 		if (this.props.event.available.food[this.props.menuItem._id]) {
 			status = true;
 		}
+		return status;
+	}
+
+	checkOrdered() {
+		let status = false;
+		let order = this.props.event.order[Meteor.userId()];		
+		if (order) {
+			status = order[this.props.menuItem._id];
+		}		
 		return status;
 	}
 
@@ -56,15 +74,19 @@ export default class MenuItem extends Component {
   }
 
   order() {
+  	const taskClassName = classnames({ 
+	  	unavailable:   !this.state.ordered,      
+	});
   	return (
-	  <li>
+	  <li className={taskClassName}>
 
 		
 		<input
 		  type="checkbox"
 		  readOnly
-		  // checked={this.props.menuItem.available}
-		  // onClick={this.toggleAvailable.bind(this)}
+		  checked={this.state.ordered}
+		  onClick={this.toggleOrdered.bind(this)}
+
 		/> 		
 
 		<span className="text">
@@ -79,7 +101,7 @@ export default class MenuItem extends Component {
 	// Give tasks a different className when they are checked off,
 	// so that we can style them nicely in CSS
 
-	console.log(this.props.order);
+	// console.log(this.state.ordered);
 	if (this.props.order) {
 		return this.order();
 	} else {

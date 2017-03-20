@@ -88,10 +88,10 @@ class EventEdit extends Component {
 };
 
 EventEdit.propTypes = {
-	// events: PropTypes.array.isRequired,
-  // incompleteCount: PropTypes.number.isRequired,
-  currentUser: PropTypes.object,
-  // countUsers: PropTypes.number.isRequired,
+	event: PropTypes.object.isRequired,
+  	// incompleteCount: PropTypes.number.isRequired,
+  	currentUser: PropTypes.object,
+  	// countUsers: PropTypes.number.isRequired,
 };
 
 export default createContainer((params) => {

@@ -15,23 +15,23 @@ import Header from './Header.jsx';
 class Order extends Component {
 	constructor(props) {
 		super(props);	  
-		this.state = {
-			eventObj: false,	
-		};
+		// this.state = {
+		// 	eventObj: false,	
+		// };
 
-		this.props.params.event ? this.getEventForEdit() : '';
+		// this.props.params.event ? this.getEventForEdit() : '';
 	}
 
-	getEventForEdit() {
-		Meteor.call('events.findById', this.props.params.event, (err, result) => {				
-			this.setState({
-				eventObj: result,
-			});
-		});			
-	}
+	// getEventForEdit() {
+	// 	Meteor.call('events.findById', this.props.params.event, (err, result) => {				
+	// 		this.setState({
+	// 			eventObj: result,
+	// 		});
+	// 	});			
+	// }
 
 	showFood() {		
-		return (<Food event={this.state.eventObj} order={true} />);
+		return (<Food event={this.props.event} order={true} />);
 	}
 
 	render() {		
@@ -39,7 +39,7 @@ class Order extends Component {
 			<div className="container">
 				<Header /> 
 				
-				{ this.state.eventObj ? 
+				{ this.props.event ? 
 					<div className="contentBLock">	
 						<div>	
 							{this.showFood()}						
@@ -58,12 +58,13 @@ Order.propTypes = {
   // countUsers: PropTypes.number.isRequired,
 };
 
-export default createContainer(() => {
+export default createContainer((params) => {
 	Meteor.subscribe('events');
 	Meteor.subscribe('menu'); 
 	Meteor.subscribe('usersList'); 
 	
 	return {
+		event: Events.findOne(params.params.event),
 		// countUsers: Meteor.users.find().count(),
 		// events: Menu.find({}, { sort: { createdAt: -1 } }).fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
