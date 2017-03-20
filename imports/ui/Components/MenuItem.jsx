@@ -90,8 +90,11 @@ export default class MenuItem extends Component {
 		  readOnly
 		  checked={this.state.ordered}
 		  onClick={this.toggleOrdered.bind(this)}
-
-		/> 		
+		/> 
+		{ this.state.ordered ? 
+			<input type="number" name="quantity" min="1" max="5" />
+		: ''}		
+		
 
 		<span className="text">
 		  <strong>{this.props.menuItem.text}</strong>: {this.props.menuItem.price} grn.
