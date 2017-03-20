@@ -41,10 +41,9 @@ class Food extends Component {
 		}); 		
 	}
 
-	renderMenu() { 
-		
+	renderMenu() { 		
 		return this.props.menuItems.map((item) => (
-			<MenuItem key={item._id} menuItem={item} event={this.props.event} order={this.props.order}/>
+			<MenuItem key={item._id} menuItem={item} event={this.props.event} order={this.props.order} onSelect={this.props.onSelect} />
 			));
 	}
 

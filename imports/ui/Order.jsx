@@ -15,11 +15,9 @@ import Header from './Header.jsx';
 class Order extends Component {
 	constructor(props) {
 		super(props);	  
-		// this.state = {
-		// 	eventObj: false,	
-		// };
-
-		// this.props.params.event ? this.getEventForEdit() : '';
+		this.state = {
+			totalPrice: this.countTotalPrice(),	
+		};
 	}
 
 	// getEventForEdit() {
@@ -30,17 +28,42 @@ class Order extends Component {
 	// 	});			
 	// }
 
+	countTotalPrice() {
+		let order = this.props.event.order[Meteor.userId()];
+		var price = 0;
+		for (var menuId in order) {
+			if (order[menuId]) {
+				let menuObj = Menu.findOne(menuId);					
+				price += menuObj.price;				
+			}
+		}
+		return price;
+		
+		
+	}
+
+	changePrice() {		
+		this.setState({			
+			totalPrice: this.countTotalPrice(),
+		});
+	}
+
+
+
 	showFood() {		
-		return (<Food event={this.props.event} order={true} />);
+		return (<Food event={this.props.event} order={true} onSelect={ this.changePrice.bind(this) } />);
 	}
 
 	render() {		
+		
 		return (			
 			<div className="container">
 				<Header /> 
 				
 				{ this.props.event ? 
-					<div className="contentBLock">	
+					<div className="contentBLock">
+					
+						<div>Your price: {this.state.totalPrice} grn.</div>
 						<div>	
 							{this.showFood()}						
 						</div>	

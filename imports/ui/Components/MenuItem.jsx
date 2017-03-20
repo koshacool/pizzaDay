@@ -24,10 +24,14 @@ export default class MenuItem extends Component {
 	}
 
 	toggleOrdered() { 
-		Meteor.call('events.order', this.props.menuItem._id, this.props.event._id, !this.state.ordered);				
-		this.setState({
-			ordered: !this.state.ordered,
-		});
+		Meteor.call('events.order', this.props.menuItem._id, this.props.event._id, !this.state.ordered, (err, result) => {
+			this.setState({
+				ordered: !this.state.ordered,
+			});
+			this.props.onSelect();
+		});				
+		
+
 				
 	}
 
