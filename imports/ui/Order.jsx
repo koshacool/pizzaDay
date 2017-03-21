@@ -29,17 +29,19 @@ class Order extends Component {
 	// }
 
 	countTotalPrice() {
-		let order = this.props.event.order[Meteor.userId()];
 		var price = 0;
-		for (var menuId in order) {
-			if (order[menuId]) {
+		let userOrder = this.props.event.orders[Meteor.userId()];
+		
+		if (userOrder) {
+			for (var menuId in userOrder.order) {
+			if (userOrder.order[menuId].status) {
 				let menuObj = Menu.findOne(menuId);					
 				price += menuObj.price;				
 			}
 		}
+		}
+		
 		return price;
-		
-		
 	}
 
 	changePrice() {		

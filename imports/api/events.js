@@ -36,7 +36,7 @@ Meteor.methods({
 				},
 				food: {},
 			},
-			order: {},
+			orders: {},
 		};	
 
 		// return Events.insert(obj);
@@ -104,8 +104,8 @@ Meteor.methods({
 		//   // If the task is private, make sure only the owner can check it off
 		//   throw new Meteor.Error('not-authorized');
 		// }
-	
-		Events.update(eventId, { $set: { ['order.' + Meteor.userId() + '.' + foodId]: setOrdered } });	
+		var menuItem = 'orders.' + Meteor.userId() + '.order.' + foodId;
+		Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: '1'} });	
 	},
 
 

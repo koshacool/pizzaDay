@@ -12,6 +12,7 @@ export default class MenuItem extends Component {
 		this.state = {			
 			available: this.checkAvailable(),
 			ordered: this.checkOrdered(),
+			number: 0,
 		};
 	}
 
@@ -28,7 +29,7 @@ export default class MenuItem extends Component {
 			this.setState({
 				ordered: !this.state.ordered,
 			});
-			this.props.onSelect();
+			this.props.onSelect();//Count total price in order
 		});				
 		
 
@@ -45,9 +46,9 @@ export default class MenuItem extends Component {
 
 	checkOrdered() {
 		let status = false;
-		let order = this.props.event.order[Meteor.userId()];		
-		if (order) {
-			status = order[this.props.menuItem._id];
+		let userOrder = this.props.event.orders[Meteor.userId()];		
+		if (userOrder && userOrder.order[this.props.menuItem._id]) {
+			status = userOrder.order[this.props.menuItem._id].status;
 		}		
 		return status;
 	}
@@ -91,9 +92,7 @@ export default class MenuItem extends Component {
 		  checked={this.state.ordered}
 		  onClick={this.toggleOrdered.bind(this)}
 		/> 
-		{ this.state.ordered ? 
-			<input type="number" name="quantity" min="1" max="5" />
-		: ''}		
+		{ this.state.ordered ? <input type="number" name="quantity" min="1" max="10" value="1" /> : '' }		
 		
 
 		<span className="text">
@@ -124,6 +123,7 @@ MenuItem.propTypes = {
   // We can use propTypes to indicate it is required
   menuItem: PropTypes.object.isRequired,
   event: PropTypes.object.isRequired,
+
 
   // showPrivateButton: React.PropTypes.bool.isRequired,
 };
