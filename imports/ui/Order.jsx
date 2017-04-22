@@ -60,8 +60,7 @@ class Order extends Component {
 		
 		return (			
 			<div className="container">
-				<Header /> 
-				
+
 				{ this.props.event ? 
 					<div className="contentBLock">
 					
