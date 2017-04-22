@@ -16,46 +16,46 @@ class EventEdit extends Component {
 	constructor(props) {
 		super(props);	  
 		this.state = {
-			eventObj: false,								
+			// eventObj: false,								
 			showAddPeople: false,
 			showAddMenu: false,	
 		};
 
-		this.props.params.event ? this.getEventForEdit() : '';
+		// this.props.params.event ? this.getEventForEdit() : '';
 	}
 
-	getEventForEdit() {
-		Meteor.call('events.findById', this.props.params.event, (err, result) => {				
-			this.setState({
-				eventObj: result,
-			});
-		});			
-	}
+	// getEventForEdit() {
+	// 	Meteor.call('events.findById', this.props.params.event, (err, result) => {				
+	// 		this.setState({
+	// 			eventObj: result,
+	// 		});
+	// 	});			
+	// }
 
 	showFood() {		
-		return (<Food event={this.state.eventObj} />);
+		return (<Food event={this.props.event} />);
 	}
 
 	showPeople() {		
-		return (<People event={this.state.eventObj} />);
+		return (<People event={this.props.event} />);
 	}
 
-	render() {		
+	render() {			
 		return (			
 			<div className="container">
 				<Header /> 
 				
-				{ this.state.eventObj ? 
+				{ this.props.event ? 
 					<div className="contentBLock">							
 						<div className="buttons">
 							<h2>
-								<strong>Event Name: </strong> { this.state.eventObj.text  } 
+								<strong>Event Name: </strong> { this.props.event.text  } 
 								<button >
 									Change
 								</button>
 							</h2>						 
 							<h3>
-								<strong>Total people: </strong> { Helper.countEvailableItems(this.state.eventObj.available.users) }						
+								<strong>Total people: </strong> { Helper.countEvailableItems(this.props.event.available.users) }						
 								<button onClick={ (event) => {
 									this.setState({
 										showAddPeople: !this.state.showAddPeople,
@@ -66,7 +66,7 @@ class EventEdit extends Component {
 								</button>
 							</h3> 						
 							<h3>
-								<strong>Total food: </strong> { Helper.countEvailableItems(this.state.eventObj.available.food) }
+								<strong>Total food: </strong> { Helper.countEvailableItems(this.props.event.available.food) }
 								<button onClick={ (event) => {
 									this.setState({
 										showAddMenu: !this.state.showAddMenu,
@@ -88,20 +88,20 @@ class EventEdit extends Component {
 };
 
 EventEdit.propTypes = {
-	// events: PropTypes.array.isRequired,
-  // incompleteCount: PropTypes.number.isRequired,
-  currentUser: PropTypes.object,
-  // countUsers: PropTypes.number.isRequired,
+	event: PropTypes.object.isRequired,
+  	// incompleteCount: PropTypes.number.isRequired,
+  	currentUser: PropTypes.object,
+  	// countUsers: PropTypes.number.isRequired,
 };
 
-export default createContainer(() => {
+export default createContainer((params) => {
 	Meteor.subscribe('events');
 	Meteor.subscribe('menu'); 
 	Meteor.subscribe('usersList'); 
-	
+	// console.log(params);
 	return {
 		// countUsers: Meteor.users.find().count(),
-		// events: Menu.find({}, { sort: { createdAt: -1 } }).fetch(),
+		event: Events.findOne(params.params.event),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
 	  	currentUser: Meteor.user(),
 	};

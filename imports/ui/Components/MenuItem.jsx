@@ -11,6 +11,8 @@ export default class MenuItem extends Component {
 
 		this.state = {			
 			available: this.checkAvailable(),
+			ordered: this.checkOrdered(),
+			number: 0,
 		};
 	}
 
@@ -22,6 +24,18 @@ export default class MenuItem extends Component {
 				
 	}
 
+	toggleOrdered() { 
+		Meteor.call('events.order', this.props.menuItem._id, this.props.event._id, !this.state.ordered, (err, result) => {
+			this.setState({
+				ordered: !this.state.ordered,
+			});
+			this.props.onSelect();//Count total price in order
+		});				
+		
+
+				
+	}
+
 	checkAvailable() {
 		let status = false;
 		if (this.props.event.available.food[this.props.menuItem._id]) {
@@ -30,35 +44,28 @@ export default class MenuItem extends Component {
 		return status;
 	}
 
+	checkOrdered() {
+		let status = false;
+		let userOrder = this.props.event.orders[Meteor.userId()];		
+		if (userOrder && userOrder.order[this.props.menuItem._id]) {
+			status = userOrder.order[this.props.menuItem._id].status;
+		}		
+		return status;
+	}
+
   deleteThisItem() {
 	 Meteor.call('menu.remove', this.props.menuItem._id);
   }
 
-
-  render() {
-	// Give tasks a different className when they are checked off,
-	// so that we can style them nicely in CSS
-
-	 const taskClassName = classnames({ 
+  editItem() {
+  	const taskClassName = classnames({ 
 	  	unavailable: !this.state.available,      
-	});  
-	 
-	 // console.log(this.props.menuItem);
-
-	return (
+	});
+  		return (
 	  <li className={taskClassName}>
 	  <button className="delete" onClick={this.deleteThisItem.bind(this)}>
 		  &times;
-		</button>
-
-		{ this.props.menuItem.available ?
-		<input
-		  type="checkbox"
-		  readOnly
-		  // checked={this.props.menuItem.available}
-		  // onClick={this.toggleAvailable.bind(this)}
-		/> : ''
-	  }
+		</button>		
 
 		<button className="toggle-private" onClick={this.toggleAvailable.bind(this)}>
 			{ !this.state.available ? 'Available' : 'UnAvailable' }
@@ -70,6 +77,45 @@ export default class MenuItem extends Component {
 	  </li>
 	);
   }
+
+  order() {
+  	const taskClassName = classnames({ 
+	  	unavailable:   !this.state.ordered,      
+	});
+  	return (
+	  <li className={taskClassName}>
+
+		
+		<input
+		  type="checkbox"
+		  readOnly
+		  checked={this.state.ordered}
+		  onClick={this.toggleOrdered.bind(this)}
+		/> 
+		{ this.state.ordered ? <input type="number" name="quantity" min="1" max="10" value="1" /> : '' }		
+		
+
+		<span className="text">
+		  <strong>{this.props.menuItem.text}</strong>: {this.props.menuItem.price} grn.
+		</span>        
+	  </li>
+	);	
+  }
+
+
+  render() {
+	// Give tasks a different className when they are checked off,
+	// so that we can style them nicely in CSS
+
+	// console.log(this.state.ordered);
+	if (this.props.order) {
+		return this.order();
+	} else {
+		return this.editItem(); 
+	}
+	
+	
+  }
 }
 
 MenuItem.propTypes = {
@@ -77,5 +123,7 @@ MenuItem.propTypes = {
   // We can use propTypes to indicate it is required
   menuItem: PropTypes.object.isRequired,
   event: PropTypes.object.isRequired,
+
+
   // showPrivateButton: React.PropTypes.bool.isRequired,
 };

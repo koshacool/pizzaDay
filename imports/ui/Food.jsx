@@ -41,18 +41,19 @@ class Food extends Component {
 		}); 		
 	}
 
-	renderMenu() { 
+	renderMenu() { 		
 		return this.props.menuItems.map((item) => (
-			<MenuItem key={item._id} menuItem={item} event={this.props.event} />
+			<MenuItem key={item._id} menuItem={item} event={this.props.event} order={this.props.order} onSelect={this.props.onSelect} />
 			));
 	}
 
 	render() {
 		return (
 			<div className="container">
-
 			<div className="contentBLock">
 			{ this.props.currentUser ?
+				<div>
+				{ !this.props.order ?
 				<form className="new-task" onSubmit={this.addMenuItem.bind(this)} >
 					<div>
 					Name: <input
@@ -93,11 +94,11 @@ class Food extends Component {
 				</form> : ''
 			}
 
-			{ this.props.currentUser ?
 				<ul>
-				{this.renderMenu()}
-				</ul> : ''
-			}
+					{this.renderMenu()}
+				</ul>
+				</div> : ''
+			}			
 
 			</div>
 			</div>
