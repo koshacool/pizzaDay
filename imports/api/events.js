@@ -89,7 +89,7 @@ Meteor.methods({
 		// if (item.private && item.owner !== this.userId) {
 		//   // If the task is private, make sure only the owner can check it off
 		//   throw new Meteor.Error('not-authorized');
-		// }
+		//N }
 	
 		Events.update(eventId, { $set: { ['available.food.' + foodId]: setAvailable } });	
 	},

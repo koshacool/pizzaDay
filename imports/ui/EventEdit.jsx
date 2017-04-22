@@ -43,35 +43,36 @@ class EventEdit extends Component {
     render() {
         return (
             <div className="container">
-
-                <div className="contentBLock">
-                    <div className="buttons">
-                        <h2>
-                            <strong>Event Name: </strong> { this.props.event.text  }
-                            <button >
-                                Change
-                            </button>
-                        </h2>
-                        <h3>
-                            <strong>Total
-                                people: </strong> { Helper.countEvailableItems(this.props.event.available.users) }
-                            <button>
-                                <Link to={'/event/' + this.props.event._id + '/people'}> Add People </Link>
-                            </button>
-                        </h3>
-                        <h3>
-                            <strong>Total
-                                food: </strong> { Helper.countEvailableItems(this.props.event.available.food) }
-                            <button>
-                                <Link to={'/event/' + this.props.event._id + '/food'}> Add Food </Link>
-                            </button>
-                        </h3>
+                { this.props.currentUser._id === this.props.event.owner._id ?
+                    <div className="contentBLock">
+                        <div className="buttons">
+                            <h2>
+                                <strong>Event Name: </strong> { this.props.event.text  }
+                                <button >
+                                    Change
+                                </button>
+                            </h2>
+                            <h3>
+                                <strong> Total people: </strong>
+                                { Helper.countEvailableItems(this.props.event.available.users) }
+                                <button>
+                                    <Link to={'/event/' + this.props.event._id + '/people'}> Add People </Link>
+                                </button>
+                            </h3>
+                            <h3>
+                                <strong>Total
+                                    food: </strong> { Helper.countEvailableItems(this.props.event.available.food) }
+                                <button>
+                                    <Link to={'/event/' + this.props.event._id + '/food'}> Add Food </Link>
+                                </button>
+                            </h3>
+                        </div>
+                        <div>
+                            { this.props.children }
+                        </div>
                     </div>
-                    <div>
-                        { this.props.children }
-                    </div>
-                </div>
-
+                    : <strong>You haven't permission to edit this event!</strong>
+                }
             </div>
         );
     }

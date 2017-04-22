@@ -9,7 +9,8 @@ import User from './Components/User.jsx';
 // App component - represents the whole app
 class People extends Component {
   constructor(props) {
-	  super(props);	  
+	  super(props);
+	  console.log(this.props.event)
   }
 
  renderUsers() {  
