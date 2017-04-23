@@ -17,7 +17,7 @@ export default class User extends Component {
 
     checkAvailable() {
         let status = false;
-        if (this.props.event.available.users[this.props.userId]) {
+        if (this.props.event.available.users[this.props.currentUser._id]) {
             status = true;
         }
         return status;
@@ -28,6 +28,7 @@ export default class User extends Component {
         this.setState({
             available: !this.state.available,
         });
+
     }
 
     render() {
@@ -52,6 +53,9 @@ export default class User extends Component {
                     : ''
                 }
             </div>
+
+
+
         );
     }
 }

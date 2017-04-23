@@ -20,7 +20,7 @@ class EventEdit extends Component {
         // 	showAddPeople: false,
         // 	showAddMenu: false,
         // };
-
+        // console.log(this.props.event)
         // this.props.params.event ? this.getEventForEdit() : '';
     }
 

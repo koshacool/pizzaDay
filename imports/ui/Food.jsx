@@ -111,6 +111,7 @@ class Food extends Component {
 ;
 
 Food.propTypes = {
+    event: PropTypes.object.isRequired,
     menuItems: PropTypes.array.isRequired,
     // incompleteCount: PropTypes.number.isRequired,
     currentUser: PropTypes.object,

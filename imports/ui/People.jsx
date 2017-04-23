@@ -10,12 +10,11 @@ import User from './Components/User.jsx';
 class People extends Component {
   constructor(props) {
 	  super(props);
-	  console.log(this.props.event)
   }
 
  renderUsers() {  
   return this.props.users.map((user) => (
-	  <User userId={user._id} currentUser={user} event={this.props.event} />
+	  <User key={user._id} currentUser={user} event={this.props.event} />
 	));
   }
 
