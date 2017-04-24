@@ -43,6 +43,16 @@ Meteor.methods({
 		return Events.findOne({_id: Events.insert(obj)});
 	},
 
+	'events.changeName'(eventId, name) {
+		check(name, String);
+		// Make sure the user is logged in before inserting a task
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
+
+		Events.update(eventId, { $set: { text: name } });
+	},
+
 	'events.remove'(eventId) {
 		check(eventId, String);
 
@@ -107,6 +117,8 @@ Meteor.methods({
 		var menuItem = 'orders.' + Meteor.userId() + '.order.' + foodId;
 		Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: '1'} });	
 	},
+
+
 
 
 	

@@ -1,12 +1,12 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import {Meteor} from 'meteor/meteor';
-import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+//import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import {createContainer} from 'meteor/react-meteor-data';
 
 import {Events} from '../api/events.js';
 import Event from './Components/Event.jsx';
-import Header from './Header.jsx';
+import Header from './Elements/Header.jsx';
 
 // App component - represents the whole app
 class App extends Component {

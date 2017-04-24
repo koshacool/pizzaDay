@@ -8,7 +8,7 @@ import {Events} from '../api/events.js';
 import {Menu} from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-import Header from './Header.jsx';
+import {ShowWindow, HideWindow} from './Helper/ModalWindow.js';
 
 
 // App component - represents the whole app
@@ -40,39 +40,79 @@ class EventEdit extends Component {
     // 	return (<People event={this.props.event} />);
     // }
 
+    changeName() {
+        let form = document.createElement('form');
+        form.action = '#';
+        form.method = 'POST';
+        form.onsubmit = (evt) => {
+            evt.preventDefault();
+            Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
+                HideWindow(); //Redirect to page for edit event
+            });
+        };
+
+        let name = document.createElement('strong');
+        name.innerHTML = 'Event Name: ';
+        form.appendChild(name);
+
+        let input = document.createElement('input');
+        input.type = 'text';
+        input.required = true;
+        //input.pattern = '^[a-zA-Z]+$';
+        input.value = this.props.event.text;
+        form.appendChild(input);
+
+        let button = document.createElement('button');
+        button.type = 'submit';
+        button.innerHTML = 'OK';
+        form.appendChild(button);
+
+        let cancel = document.createElement('button');
+        cancel.type = 'button';
+        cancel.innerHTML = 'Cancel';
+        cancel.onclick = (evt) => {
+            HideWindow();
+        };
+        form.appendChild(cancel);
+
+
+        ShowWindow(form);
+        //input.focus();
+    }
+
     render() {
         return (
             <div className="container">
                 { this.props.currentUser._id === this.props.event.owner._id ?
-                    <div className="contentBLock">
-                        <div className="buttons">
-                            <h2>
-                                <strong>Event Name: </strong> { this.props.event.text  }
-                                <button >
-                                    Change
-                                </button>
-                            </h2>
-                            <h3>
-                                <strong> Total people: </strong>
-                                { Helper.countEvailableItems(this.props.event.available.users) }
-                                <button>
-                                    <Link to={'/event/' + this.props.event._id + '/people'}> Add People </Link>
-                                </button>
-                            </h3>
-                            <h3>
-                                <strong>Total
-                                    food: </strong> { Helper.countEvailableItems(this.props.event.available.food) }
-                                <button>
-                                    <Link to={'/event/' + this.props.event._id + '/food'}> Add Food </Link>
-                                </button>
-                            </h3>
-                        </div>
-                        <div>
-                            { this.props.children }
-                        </div>
+                <div className="contentBLock">
+                    <div className="buttons">
+                        <h2>
+                            <strong>Event Name: </strong>
+                            <span id='eventName' onClick={this.changeName.bind(this)}>
+                                { this.props.event.text  }
+                            </span>
+                        </h2>
+                        <h3>
+                            <strong> Total people: </strong>
+                            { Helper.countEvailableItems(this.props.event.available.users) }
+                            <button>
+                                <Link to={'/event/' + this.props.event._id + '/people'}> Add People </Link>
+                            </button>
+                        </h3>
+                        <h3>
+                            <strong>Total
+                                food: </strong> { Helper.countEvailableItems(this.props.event.available.food) }
+                            <button>
+                                <Link to={'/event/' + this.props.event._id + '/food'}> Add Food </Link>
+                            </button>
+                        </h3>
                     </div>
+                    <div>
+                        { this.props.children }
+                    </div>
+                </div>
                     : <strong>You haven't permission to edit this event!</strong>
-                }
+                    }
             </div>
         );
     }

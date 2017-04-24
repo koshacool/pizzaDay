@@ -1,8 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-import {Meteor} from 'meteor/meteor';
-import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import {Link} from 'react-router';
+import {Meteor} from 'meteor/meteor';
+
+import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import {createContainer} from 'meteor/react-meteor-data';
 
 

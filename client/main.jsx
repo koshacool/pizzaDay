@@ -6,7 +6,7 @@ import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import '../imports/startup/accounts-config.js';
 
 import App from '../imports/ui/App.jsx';
-import NotFound from '../imports/ui/NotFound.jsx';
+import NotFound from '../imports/ui/Elements/NotFound.jsx';
 import Food from '../imports/ui/Food.jsx';
 import EventNew from '../imports/ui/EventNew.jsx';
 import EventEdit from '../imports/ui/EventEdit.jsx';
