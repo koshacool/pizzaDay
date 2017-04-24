@@ -1,38 +1,30 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
-import AccountsUIWrapper from './AccountsUIWrapper.jsx';
-import { Link } from 'react-router';
 
+import { Events } from '../api/events.js';
 import User from './Components/User.jsx';
 
 
 // App component - represents the whole app
 class People extends Component {
   constructor(props) {
-	  super(props);	  
-  }  
-  
+	  super(props);
+  }
 
  renderUsers() {  
   return this.props.users.map((user) => (
-	  <User key={user._id} currentUser={user} event={this.props.event}/>
+	  <User key={user._id} currentUser={user} event={this.props.event} />
 	));
   }
 
   render() {
 	return (
-	  <div className="container">
 		<div className="contentBLock">
-        	{ this.props.currentUser ?
 				<ul>
 		  			{this.renderUsers()}
-				</ul> 
-			: ''
-			}	
+				</ul>
     	</div>
-	  </div>
 	);
   }
 
@@ -45,10 +37,12 @@ People.propTypes = {
   currentUser: PropTypes.object,
 };
 
-export default createContainer(function() {
+export default createContainer(function(params) {
 	Meteor.subscribe('usersList');
-	
+    Meteor.subscribe('events');
+
 	return {
+      event: Events.findOne(params.params.event),
 	  users: Meteor.users.find().fetch(),
 	  // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
 	  currentUser: Meteor.user(),

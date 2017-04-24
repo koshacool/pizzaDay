@@ -10,7 +10,7 @@ export default class NotFound extends Component {
     	    		<h2 >Erorr: 404</h2>                	
                 	<span>
         	    		Page Not Found 
-        	    		<Link to='/'> To Main Paig </Link>?  
+        	    		<Link to='/'> To Main Page </Link>
             		</span>
             	</div>            	
         	</div>    		

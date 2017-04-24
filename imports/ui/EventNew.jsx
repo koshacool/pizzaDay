@@ -8,7 +8,7 @@ import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-import Header from './Header.jsx';
+//import Header from './Header.jsx';
 
 // App component - represents the whole app
 class EventNew extends Component {
@@ -35,7 +35,7 @@ class EventNew extends Component {
 	render() {		
 		return (
 			<div className="container">
-				<Header />				
+
 				<div className="contentBLock">						
 					<form className="new-task" onSubmit={this._createEvent} >
 						<strong>Event Name:</strong>

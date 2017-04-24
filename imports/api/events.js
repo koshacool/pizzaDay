@@ -43,6 +43,16 @@ Meteor.methods({
 		return Events.findOne({_id: Events.insert(obj)});
 	},
 
+	'events.changeName'(eventId, name) {
+		check(name, String);
+		// Make sure the user is logged in before inserting a task
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
+
+		Events.update(eventId, { $set: { text: name } });
+	},
+
 	'events.remove'(eventId) {
 		check(eventId, String);
 
@@ -89,7 +99,7 @@ Meteor.methods({
 		// if (item.private && item.owner !== this.userId) {
 		//   // If the task is private, make sure only the owner can check it off
 		//   throw new Meteor.Error('not-authorized');
-		// }
+		//N }
 	
 		Events.update(eventId, { $set: { ['available.food.' + foodId]: setAvailable } });	
 	},
@@ -107,6 +117,8 @@ Meteor.methods({
 		var menuItem = 'orders.' + Meteor.userId() + '.order.' + foodId;
 		Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: '1'} });	
 	},
+
+
 
 
 	
