@@ -77,8 +77,8 @@ class EventEdit extends Component {
 
 
         ShowWindow(form);
-        //input.focus();
-    }
+       input.focus();
+}
 
     render() {
         return (
