@@ -19,6 +19,10 @@ export const Helper = {
         return value.length > 0;
     },
 
+    hideModalWindow() {
+        document.body.removeChild(document.getElementById('modalDiv'));
+    },
+
     createElementDom(name, attributes = null, children = null) {
         //Concatination object params for style atributes
         function concatStyle(obj) {
@@ -56,3 +60,4 @@ export const Helper = {
     },
 
 };
+

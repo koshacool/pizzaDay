@@ -6,8 +6,8 @@ import {Link} from 'react-router';
 
 import { Events } from '../api/events.js';
 import User from './Components/User.jsx';
-import Modal from './Modal.jsx';
-import {ShowWindow, HideWindow} from './Helper/ModalWindow.js';
+import Group from './ModalWindows/Group.jsx';
+//import {ShowWindow, HideWindow} from './Helper/ModalWindow.js';
 
 
 // App component - represents the whole app
@@ -19,70 +19,52 @@ class People extends Component {
         }
     }
 
-    createGroup() {
-        let form = document.createElement('form');
-        form.action = '#';
-        form.method = 'POST';
-        form.onsubmit = (evt) => {
-            evt.preventDefault();
-            console.log(this.props.currentUser);
-            if (this.props.currentUser.groups[evt.target[0].value] !== undefined) {
-                alert('Such group already exist!');
-                return;
-            }
-            Meteor.users.update(
-                Meteor.userId(),
-                {$set: {['groups.' + evt.target[0].value]: {}}},
-                (err, result) => {
-                    HideWindow();
-                    addPeopleToGroup(evt.target[0].value);
-                });
-        };
-
-        let name = document.createElement('strong');
-        name.innerHTML = 'Group Name: ';
-        form.appendChild(name);
-
-        let input = document.createElement('input');
-        input.type = 'text';
-        input.required = true;
-        //input.pattern = '^[a-zA-Z]+$';
-        //input.value = this.props.event.text;
-        form.appendChild(input);
-
-        let button = document.createElement('button');
-        button.type = 'submit';
-        button.innerHTML = 'OK';
-        form.appendChild(button);
-
-        let cancel = document.createElement('button');
-        cancel.type = 'button';
-        cancel.innerHTML = 'Cancel';
-        cancel.onclick = (evt) => {
-            HideWindow();
-        };
-        form.appendChild(cancel);
+    createGroup(evt) {
+        evt.preventDefault();
+        console.log(this.props.currentUser);
+        if (this.props.currentUser.groups[evt.target[0].value] !== undefined) {
+            alert('Such group already exist!');
+            return;
+        }
+        Meteor.users.update(
+            Meteor.userId(),
+            {$set: {['groups.' + evt.target[0].value]: {} } },
+            (err, result) => {
+                this.hideModal();
+                this.showEditGroup(evt.target[0].value);
+            });
+    };
 
 
-        ShowWindow(form);
-        input.focus();
-    }
 
-    addPeopleToGroup(groupName) {
-        let div = document.createElement('div');
-
-        div.appendChild(this.renderUsers());
-        ShowWindow(div);
-    }
-
-    showModal() {
+    showCreateGroup() {
         this.setState({
-            modal: <Modal />,
+            modal: <Group hideWindow={this.hideModal.bind(this)} createGroup={this.createGroup.bind(this)} />,
         });
     }
+
+    showEditGroup(groupName) {
+        this.setState({
+            modal: <Group hideWindow={this.hideModal.bind(this)} users={this.renderUsersForGroup(groupName)} />,
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            modal: '',
+        });
+    }
+
+    renderUsersForGroup(groupName) {
+        return this.props.users.map((user) => (
+            <User key={user._id} user={user} groupName={groupName} />
+        ));
+    }
+
+
     renderUsers() {
         return this.props.users.map((user) => (
-            <User key={user._id} currentUser={user} event={this.props.event}/>
+            <User key={user._id} user={user} event={this.props.event}/>
         ));
     }
 
@@ -90,7 +72,7 @@ class People extends Component {
         return (
             <div className="contentBLock">
                 <div className="buttons">
-                    <button onClick={this.showModal.bind(this)}>
+                    <button onClick={this.showCreateGroup.bind(this)}>
                         Great Group
                     </button>
 

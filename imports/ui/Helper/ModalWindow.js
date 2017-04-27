@@ -6,6 +6,3 @@ export const ShowWindow = function (content) {
         document.body.appendChild(modalDiv);
 };
 
-export const HideWindow = function hideCover() {
-    document.body.removeChild(document.getElementById('modalDiv'));
-}
