@@ -31,6 +31,16 @@ export default class Group extends Component {
         );
     }
 
+    showUsers() {
+        return (
+            <div>
+                <strong>Event Name: {this.props.groupName}</strong>
+                <button onClick={() => this.props.hideWindow()}> OK </button>
+                {this.props.users}
+            </div>
+        )
+    }
+
 
     render() {
         let modalDiv = {
@@ -54,7 +64,8 @@ export default class Group extends Component {
         return (
             <div style={modalDiv}>
                 <div style={modalContainer}>
-                    {this.state.users ? this.props.users : this.showForm()}
+
+                    {this.state.users ? this.showUsers() : this.showForm()}
                 </div>
             </div>
         );
@@ -63,3 +74,11 @@ export default class Group extends Component {
 
 };
 
+Group.propTypes = {
+    // This component gets the task to display through a React prop.
+    // We can use propTypes to indicate it is required
+    hideWindow: PropTypes.func.isRequired,
+    createGroup: PropTypes.func,
+    // users: PropTypes.node,
+    groupName: PropTypes.string,
+}

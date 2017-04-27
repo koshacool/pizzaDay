@@ -21,21 +21,32 @@ class People extends Component {
 
     createGroup(evt) {
         evt.preventDefault();
+        groupName = evt.target[0].value;
         console.log(this.props.currentUser);
-        if (this.props.currentUser.groups[evt.target[0].value] !== undefined) {
-            alert('Such group already exist!');
-            return;
+        if (!this.checkExistGroupName(groupName)) {
+            alert('Such name already exist!');
+            throw new Error('bad name');
         }
         Meteor.users.update(
             Meteor.userId(),
-            {$set: {['groups.' + evt.target[0].value]: {} } },
+            {$set: {['groups.' + groupName]: {} } },
             (err, result) => {
                 this.hideModal();
-                this.showEditGroup(evt.target[0].value);
+                this.showEditGroup(groupName);
             });
     };
 
+    checkExistGroupName(name) {
+        let result = true;
+        let groupsObj = this.props.currentUser.groups;
+        if (groupsObj) {
+            if (groupsObj[name] !== undefined) {
+                result =  false;
+            }
+        }
 
+        return result;
+    }
 
     showCreateGroup() {
         this.setState({
@@ -45,7 +56,7 @@ class People extends Component {
 
     showEditGroup(groupName) {
         this.setState({
-            modal: <Group hideWindow={this.hideModal.bind(this)} users={this.renderUsersForGroup(groupName)} />,
+            modal: <Group hideWindow={this.hideModal.bind(this)} users={this.renderUsersForGroup(groupName)} groupName={groupName} />,
         });
     }
 
