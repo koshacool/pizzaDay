@@ -8,13 +8,17 @@ import {Events} from '../api/events.js';
 import {Menu} from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-import {ShowWindow, HideWindow} from './Helper/ModalWindow.js';
+import ModalWindow from './Helper/ModalWindow.jsx';
 
 
 // App component - represents the whole app
 class EventEdit extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            modal: '',
+            eventName: this.props.event.text
+        }
         // this.state = {
         // 	// eventObj: false,
         // 	showAddPeople: false,
@@ -40,45 +44,46 @@ class EventEdit extends Component {
     // 	return (<People event={this.props.event} />);
     // }
 
-    changeName() {
-        let form = document.createElement('form');
-        form.action = '#';
-        form.method = 'POST';
-        form.onsubmit = (evt) => {
-            evt.preventDefault();
-            Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
-                HideWindow(); //Redirect to page for edit event
-            });
-        };
-
-        let name = document.createElement('strong');
-        name.innerHTML = 'Event Name: ';
-        form.appendChild(name);
-
-        let input = document.createElement('input');
-        input.type = 'text';
-        input.required = true;
-        //input.pattern = '^[a-zA-Z]+$';
-        input.value = this.props.event.text;
-        form.appendChild(input);
-
-        let button = document.createElement('button');
-        button.type = 'submit';
-        button.innerHTML = 'OK';
-        form.appendChild(button);
-
-        let cancel = document.createElement('button');
-        cancel.type = 'button';
-        cancel.innerHTML = 'Cancel';
-        cancel.onclick = (evt) => {
-            HideWindow();
-        };
-        form.appendChild(cancel);
 
 
-        ShowWindow(form);
-       input.focus();
-}
+    changeName(evt) {
+        console.log(evt)
+        evt.preventDefault();
+        Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
+            this.setState({modal: ''}); //hide modal window
+        });
+    }
+
+
+
+    changeEventNameForm() {
+        return (
+            <form
+                action="#"
+                method="post"
+                onSubmit={ (evt) => {this.changeName.bind(this, evt)}}
+            >
+                <strong>Group Name: </strong>
+                <input type="text" required  value={this.state.eventName} onChange={this.handleInputChange.bind(this)} />
+                <button type="submit"> OK</button>
+                <button type="button" onClick={ () => this.setState({modal: ''}) }> CANCEL </button>
+            </form>
+        );
+
+    }
+
+    displayFormChangeName() {
+        this.setState({
+            modal: <ModalWindow content={this.changeEventNameForm()} />
+        });
+    }
+
+    handleInputChange(evt) {
+        console.log(evt.target.value)
+        this.setState({
+            eventName: evt.target.value
+        });
+    }
 
     render() {
         return (
@@ -88,7 +93,7 @@ class EventEdit extends Component {
                     <div className="buttons">
                         <h2>
                             <strong>Event Name: </strong>
-                            <span id='eventName' onClick={this.changeName.bind(this)}>
+                            <span id='eventName' onClick={this.displayFormChangeName.bind(this)}>
                                 { this.props.event.text  }
                             </span>
                         </h2>
@@ -113,6 +118,7 @@ class EventEdit extends Component {
                 </div>
                     : <strong>You haven't permission to edit this event!</strong>
                     }
+                {this.state.modal}
             </div>
         );
     }

@@ -8,7 +8,7 @@ import User from '../Components/User.jsx';
 
 
 // App component - represents the whole app
-export default class Group extends Component {
+export default class CreateGroup extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -64,7 +64,6 @@ export default class Group extends Component {
         return (
             <div style={modalDiv}>
                 <div style={modalContainer}>
-
                     {this.state.users ? this.showUsers() : this.showForm()}
                 </div>
             </div>
@@ -74,7 +73,7 @@ export default class Group extends Component {
 
 };
 
-Group.propTypes = {
+CreateGroup.propTypes = {
     // This component gets the task to display through a React prop.
     // We can use propTypes to indicate it is required
     hideWindow: PropTypes.func.isRequired,

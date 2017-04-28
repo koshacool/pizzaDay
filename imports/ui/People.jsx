@@ -6,8 +6,9 @@ import {Link} from 'react-router';
 
 import { Events } from '../api/events.js';
 import User from './Components/User.jsx';
-import Group from './ModalWindows/Group.jsx';
-//import {ShowWindow, HideWindow} from './Helper/ModalWindow.js';
+import Group from './Components/Group.jsx';
+import CreateGroup from './ModalWindows/CreateGroup.jsx';
+//import {ShowWindow, HideWindow} from './Helper/ModalWindow.jsx';
 
 
 // App component - represents the whole app
@@ -22,7 +23,7 @@ class People extends Component {
     createGroup(evt) {
         evt.preventDefault();
         groupName = evt.target[0].value;
-        console.log(this.props.currentUser);
+        console.log(Meteor.user());
         if (!this.checkExistGroupName(groupName)) {
             alert('Such name already exist!');
             throw new Error('bad name');
@@ -38,7 +39,7 @@ class People extends Component {
 
     checkExistGroupName(name) {
         let result = true;
-        let groupsObj = this.props.currentUser.groups;
+        let groupsObj = Meteor.user().groups;
         if (groupsObj) {
             if (groupsObj[name] !== undefined) {
                 result =  false;
@@ -50,13 +51,19 @@ class People extends Component {
 
     showCreateGroup() {
         this.setState({
-            modal: <Group hideWindow={this.hideModal.bind(this)} createGroup={this.createGroup.bind(this)} />,
+            modal: <CreateGroup hideWindow={this.hideModal.bind(this)} createGroup={this.createGroup.bind(this)} />,
         });
     }
 
     showEditGroup(groupName) {
         this.setState({
-            modal: <Group hideWindow={this.hideModal.bind(this)} users={this.renderUsersForGroup(groupName)} groupName={groupName} />,
+            modal: <CreateGroup hideWindow={this.hideModal.bind(this)} users={this.renderUsersForGroup(groupName)} groupName={groupName} />,
+        });
+    }
+
+    showGroups() {
+        this.setState({
+            modal:  this.renderGroups(),
         });
     }
 
@@ -66,12 +73,19 @@ class People extends Component {
         });
     }
 
+
+    renderGroups() {
+        let keys = Object.keys(this.props.groups);
+        return keys.map((groupName, i) => (
+            <Group key={i} name={groupName} group={this.props.groups[groupName]} event={this.props.event} />
+        ));
+    }
+
     renderUsersForGroup(groupName) {
         return this.props.users.map((user) => (
             <User key={user._id} user={user} groupName={groupName} />
         ));
     }
-
 
     renderUsers() {
         return this.props.users.map((user) => (
@@ -80,6 +94,7 @@ class People extends Component {
     }
 
     render() {
+        console.log('render')
         return (
             <div className="contentBLock">
                 <div className="buttons">
@@ -87,26 +102,26 @@ class People extends Component {
                         Great Group
                     </button>
 
-                    <button>
+                    <button onClick={this.showGroups.bind(this)}>
                         Add Group
                     </button>
                 </div>
                 <ul>
                     {this.renderUsers()}
                 </ul>
-                {this.state.modal}
+                <div>{this.state.modal}</div>
+
             </div>
         );
     }
 
-}
-;
+};
 
 People.propTypes = {
     users: PropTypes.array.isRequired,
     event: PropTypes.object.isRequired,
     // incompleteCount: PropTypes.number.isRequired,
-    currentUser: PropTypes.object,
+    groups: PropTypes.object.isRequired,
 };
 
 export default createContainer(function (params) {
@@ -114,9 +129,9 @@ export default createContainer(function (params) {
     Meteor.subscribe('events');
 
     return {
-        event: Events.findOne(params.params.event),
         users: Meteor.users.find().fetch(),
+        event: Events.findOne(params.params.event),
         // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
-        currentUser: Meteor.user(),
+        groups: Meteor.user().groups,
     };
 }, People);
