@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import {Meteor} from 'meteor/meteor';
 import {createContainer} from 'meteor/react-meteor-data';
 import {Link, browserHistory} from 'react-router';
+
 import {Helper} from './Helper/Helper.js';
 import {Events} from '../api/events.js';
 import {Menu} from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-import ModalWindow from './Helper/ModalWindow.jsx';
+import EventName from './ModalWindows/EventName.jsx';
 
 
 // App component - represents the whole app
@@ -44,46 +45,25 @@ class EventEdit extends Component {
     // 	return (<People event={this.props.event} />);
     // }
 
-
-
-    changeName(evt) {
-        console.log(evt)
-        evt.preventDefault();
-        Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
-            this.setState({modal: ''}); //hide modal window
-        });
+    hideWindow() {
+        this.setState({modal: ''});
     }
 
-
-
-    changeEventNameForm() {
-        return (
-            <form
-                action="#"
-                method="post"
-                onSubmit={ (evt) => {this.changeName.bind(this, evt)}}
-            >
-                <strong>Group Name: </strong>
-                <input type="text" required  value={this.state.eventName} onChange={this.handleInputChange.bind(this)} />
-                <button type="submit"> OK</button>
-                <button type="button" onClick={ () => this.setState({modal: ''}) }> CANCEL </button>
-            </form>
-        );
-
+    changeName(evt) {
+        evt.preventDefault();
+        Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
+            this.hideWindow(); //hide modal window
+        });
     }
 
     displayFormChangeName() {
         this.setState({
-            modal: <ModalWindow content={this.changeEventNameForm()} />
+            modal: <EventName event={this.props.event} hideWindow={this.hideWindow.bind(this)} changeName={this.changeName.bind(this)} />
         });
     }
 
-    handleInputChange(evt) {
-        console.log(evt.target.value)
-        this.setState({
-            eventName: evt.target.value
-        });
-    }
+
+
 
     render() {
         return (

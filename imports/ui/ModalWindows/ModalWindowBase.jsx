@@ -5,7 +5,7 @@ import {Link} from 'react-router';
 
 
 // App component - represents the whole app
-export default class ModalWindow extends Component {
+export default class ModalWindowBase extends Component {
     constructor(props) {
         super(props);
     }
@@ -41,7 +41,7 @@ export default class ModalWindow extends Component {
     }
 };
 
-ModalWindow.propTypes = {
+ModalWindowBase.propTypes = {
     content: PropTypes.object.isRequired,
 };
 

@@ -8,7 +8,7 @@ import { Events } from '../api/events.js';
 import User from './Components/User.jsx';
 import Group from './Components/Group.jsx';
 import CreateGroup from './ModalWindows/CreateGroup.jsx';
-//import {ShowWindow, HideWindow} from './Helper/ModalWindow.jsx';
+//import {ShowWindow, HideWindow} from './Helper/ModalWindowBase.jsx';
 
 
 // App component - represents the whole app
