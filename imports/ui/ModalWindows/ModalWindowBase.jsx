@@ -10,8 +10,6 @@ export default class ModalWindowBase extends Component {
         super(props);
     }
 
-
-
     render() {
         let modalDiv = {
             position: 'fixed',
@@ -42,7 +40,7 @@ export default class ModalWindowBase extends Component {
 };
 
 ModalWindowBase.propTypes = {
-    content: PropTypes.object.isRequired,
+    content: PropTypes.element.isRequired,
 };
 
 

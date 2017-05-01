@@ -1,13 +1,14 @@
-import React, { Component, PropTypes } from 'react';
-import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import React, {Component, PropTypes} from 'react';
+import {Meteor} from 'meteor/meteor';
+import {createContainer} from 'meteor/react-meteor-data';
 import {Link} from 'react-router';
 
 
-import { Events } from '../api/events.js';
+import {Events} from '../api/events.js';
 import User from './Components/User.jsx';
 import Group from './Components/Group.jsx';
-import CreateGroup from './ModalWindows/CreateGroup.jsx';
+import EditGroup from './ModalWindows/EditGroup.jsx';
+import FormForName from './ModalWindows/FormForName.jsx';
 //import {ShowWindow, HideWindow} from './Helper/ModalWindowBase.jsx';
 
 
@@ -23,67 +24,91 @@ class People extends Component {
     createGroup(evt) {
         evt.preventDefault();
         groupName = evt.target[0].value;
-        console.log(Meteor.user());
-        if (!this.checkExistGroupName(groupName)) {
+        // console.log(Meteor.user()); // console.log(Meteor.user());
+        this.checkGroupNameAndSave(groupName);
+    };
+
+    changeGroupName(oldName, newName) {
+        console.log(oldName)
+        console.log(newName)
+        this.checkGroupNameAndSave(newName);
+        Meteor.users.update(
+            Meteor.userId(),
+            {$unset: {['groups.' + oldName]: ''}}
+        );//Remove old name
+    };
+
+    checkGroupNameAndSave(name) {
+        let checkName = function(Name) {
+            let result = true;
+            let groupsObj = Meteor.user().groups;
+            if (groupsObj) {
+                if (groupsObj[name] !== undefined) {
+                    result = false;
+                }
+            }
+
+            return result;
+        }
+
+        if (!checkName(groupName)) {
             alert('Such name already exist!');
             throw new Error('bad name');
         }
+
         Meteor.users.update(
             Meteor.userId(),
-            {$set: {['groups.' + groupName]: {} } },
+            {$set: {['groups.' + groupName]: {}}},
             (err, result) => {
-                this.hideModal();
-                this.showEditGroup(groupName);
+                this.hideModalWindow();
+                this.editGroup(groupName);
             });
-    };
-
-    checkExistGroupName(name) {
-        let result = true;
-        let groupsObj = Meteor.user().groups;
-        if (groupsObj) {
-            if (groupsObj[name] !== undefined) {
-                result =  false;
-            }
-        }
-
-        return result;
     }
 
-    showCreateGroup() {
+    showFormCreateGroup() {
         this.setState({
-            modal: <CreateGroup hideWindow={this.hideModal.bind(this)} createGroup={this.createGroup.bind(this)} />,
+            modal: <FormForName
+                formName="Group Name: "
+                inputValue=""
+                hideModalWindow={this.hideModalWindow.bind(this)}
+                formSubmit={this.createGroup.bind(this)}
+            />
         });
     }
 
-    showEditGroup(groupName) {
+    editGroup(groupName) {
         this.setState({
-            modal: <CreateGroup hideWindow={this.hideModal.bind(this)} users={this.renderUsersForGroup(groupName)} groupName={groupName} />,
+            modal: <EditGroup
+                hideModalWindow={this.hideModalWindow.bind(this)}
+                users={this.renderUsersForGroup(groupName)}
+                groupName={groupName}
+                changeName={this.changeGroupName.bind(this)}
+            />,
         });
     }
 
     showGroups() {
         this.setState({
-            modal:  this.renderGroups(),
+            modal: this.renderGroups(),
         });
     }
 
-    hideModal() {
+    hideModalWindow() {
         this.setState({
             modal: '',
         });
     }
 
-
     renderGroups() {
         let keys = Object.keys(this.props.groups);
         return keys.map((groupName, i) => (
-            <Group key={i} name={groupName} group={this.props.groups[groupName]} event={this.props.event} />
+            <Group key={i} name={groupName} group={this.props.groups[groupName]} event={this.props.event}/>
         ));
     }
 
     renderUsersForGroup(groupName) {
         return this.props.users.map((user) => (
-            <User key={user._id} user={user} groupName={groupName} />
+            <User key={user._id} user={user} groupName={groupName}/>
         ));
     }
 
@@ -94,11 +119,10 @@ class People extends Component {
     }
 
     render() {
-        console.log('render')
         return (
             <div className="contentBLock">
                 <div className="buttons">
-                    <button onClick={this.showCreateGroup.bind(this)}>
+                    <button onClick={this.showFormCreateGroup.bind(this)}>
                         Great Group
                     </button>
 
@@ -115,7 +139,8 @@ class People extends Component {
         );
     }
 
-};
+}
+;
 
 People.propTypes = {
     users: PropTypes.array.isRequired,

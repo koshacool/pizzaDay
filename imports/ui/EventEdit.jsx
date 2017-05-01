@@ -9,7 +9,7 @@ import {Events} from '../api/events.js';
 import {Menu} from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-import EventName from './ModalWindows/EventName.jsx';
+import FormForName from './ModalWindows/FormForName.jsx';
 
 
 // App component - represents the whole app
@@ -18,7 +18,7 @@ class EventEdit extends Component {
         super(props);
         this.state = {
             modal: '',
-            eventName: this.props.event.text
+            // eventName: this.props.event.text
         }
         // this.state = {
         // 	// eventObj: false,
@@ -45,25 +45,28 @@ class EventEdit extends Component {
     // 	return (<People event={this.props.event} />);
     // }
 
-    hideWindow() {
+
+    hideModalWindow() {
         this.setState({modal: ''});
     }
 
     changeName(evt) {
         evt.preventDefault();
         Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
-            this.hideWindow(); //hide modal window
+            this.hideModalWindow(); //hide modal window
         });
     }
 
     displayFormChangeName() {
         this.setState({
-            modal: <EventName event={this.props.event} hideWindow={this.hideWindow.bind(this)} changeName={this.changeName.bind(this)} />
+            modal: <FormForName
+                formName="Event Name: "
+                inputValue={this.props.event.text}
+                hideModalWindow={this.hideModalWindow.bind(this)}
+                formSubmit={this.changeName.bind(this)}
+            />
         });
     }
-
-
-
 
     render() {
         return (
@@ -74,7 +77,7 @@ class EventEdit extends Component {
                         <h2>
                             <strong>Event Name: </strong>
                             <span id='eventName' onClick={this.displayFormChangeName.bind(this)}>
-                                { this.props.event.text  }
+                                { this.props.event.text }
                             </span>
                         </h2>
                         <h3>

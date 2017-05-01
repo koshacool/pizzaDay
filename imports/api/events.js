@@ -40,7 +40,7 @@ Meteor.methods({
 		};	
 
 		// return Events.insert(obj);
-		return Events.findOne({_id: Events.insert(obj)});
+		Events.findOne({_id: Events.insert(obj)});
 	},
 
 	'events.changeName'(eventId, name) {
@@ -87,7 +87,7 @@ Meteor.methods({
 		//   throw new Meteor.Error('not-authorized');
 		// }
 	
-		Events.update(eventId, { $set: { ['available.users.' + userId]: setAvailable } });	
+		return Events.update(eventId, { $set: { ['available.users.' + userId]: setAvailable } });
 	},
 
 	'events.foodAvailable'(foodId, eventId, setAvailable) {
