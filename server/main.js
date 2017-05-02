@@ -20,6 +20,7 @@ Meteor.startup(() => {
         update(userId, doc, fields, modifier) {
             // Can only change your own documents.
             //return doc._id === userId;
+            console.log('UPDATE USER');
             return true;
         },
 

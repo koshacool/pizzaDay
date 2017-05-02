@@ -3,11 +3,11 @@ import {Meteor} from 'meteor/meteor';
 import {createContainer} from 'meteor/react-meteor-data';
 import {Link} from 'react-router';
 
-
 import {Events} from '../api/events.js';
 import User from './Components/User.jsx';
 import Group from './Components/Group.jsx';
 import EditGroup from './ModalWindows/EditGroup.jsx';
+import Groups from './ModalWindows/Groups.jsx';
 import FormForName from './ModalWindows/FormForName.jsx';
 //import {ShowWindow, HideWindow} from './Helper/ModalWindowBase.jsx';
 
@@ -24,44 +24,61 @@ class People extends Component {
     createGroup(evt) {
         evt.preventDefault();
         groupName = evt.target[0].value;
-        // console.log(Meteor.user()); // console.log(Meteor.user());
         this.checkGroupNameAndSave(groupName);
     };
 
     changeGroupName(oldName, newName) {
-        console.log(oldName)
-        console.log(newName)
-        this.checkGroupNameAndSave(newName);
+        if (oldName === newName) {
+            this.hideModalWindow();
+            this.editGroup(newName);
+            return;
+        }
+
+        if (!this.checkExistGroupName(newName)) {
+            alert('Such name already exist!');
+            throw new Error('bad name');
+        }
+
+        let group = Meteor.user().groups[oldName];
+
         Meteor.users.update(
             Meteor.userId(),
             {$unset: {['groups.' + oldName]: ''}}
-        );//Remove old name
+        );//Remove group ith old name
+
+        Meteor.users.update(
+            Meteor.userId(),
+            {$set: {['groups.' + newName]: group}},
+            (err, result) => {
+                this.hideModalWindow();
+                this.editGroup(newName);
+            });
     };
 
-    checkGroupNameAndSave(name) {
-        let checkName = function(Name) {
-            let result = true;
-            let groupsObj = Meteor.user().groups;
-            if (groupsObj) {
-                if (groupsObj[name] !== undefined) {
-                    result = false;
-                }
+    checkExistGroupName(name) {
+        let result = true;
+        let groupsObj = Meteor.user().groups;
+        if (groupsObj) {
+            if (groupsObj[name] !== undefined) {
+                result = false;
             }
-
-            return result;
         }
 
-        if (!checkName(groupName)) {
+        return result;
+    }
+
+    checkGroupNameAndSave(name) {
+        if (!this.checkExistGroupName(name)) {
             alert('Such name already exist!');
             throw new Error('bad name');
         }
 
         Meteor.users.update(
             Meteor.userId(),
-            {$set: {['groups.' + groupName]: {}}},
+            {$set: {['groups.' + name]: {}}},
             (err, result) => {
                 this.hideModalWindow();
-                this.editGroup(groupName);
+                this.editGroup(name);
             });
     }
 
@@ -89,7 +106,9 @@ class People extends Component {
 
     showGroups() {
         this.setState({
-            modal: this.renderGroups(),
+            modal: <Groups
+                hideModalWindow={this.hideModalWindow.bind(this)}
+            />,
         });
     }
 
@@ -97,13 +116,6 @@ class People extends Component {
         this.setState({
             modal: '',
         });
-    }
-
-    renderGroups() {
-        let keys = Object.keys(this.props.groups);
-        return keys.map((groupName, i) => (
-            <Group key={i} name={groupName} group={this.props.groups[groupName]} event={this.props.event}/>
-        ));
     }
 
     renderUsersForGroup(groupName) {
@@ -139,8 +151,7 @@ class People extends Component {
         );
     }
 
-}
-;
+};
 
 People.propTypes = {
     users: PropTypes.array.isRequired,

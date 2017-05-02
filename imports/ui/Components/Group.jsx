@@ -32,9 +32,9 @@ export default class Group extends Component {
 
     toggleAdded() {
         //Meteor.call('events.userAvailable', this.props.user._id, this.props.event._id, !this.state.available);
-        //this.setState({
-        //    available: !this.state.available,
-        //});
+        this.setState({
+            added: !this.state.added,
+        });
 
     }
 
@@ -64,10 +64,13 @@ export default class Group extends Component {
                         className="toggle-private"
                         onClick={ this.toggleAdded.bind(this) }
                     >
-                        { this.state.available ? 'Remove' : 'Add' }
+                        { this.state.added ? 'Remove' : 'Add' }
                     </button>
 
-                    Group Name: <strong> { this.props.name } </strong>
+                    <div className='text'>
+                        Name: <strong> { this.props.name } </strong>
+                    </div>
+
                     <div className='text'>
                         Total Users: {Object.keys(this.props.group).length}
                     </div>
