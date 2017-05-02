@@ -40,6 +40,7 @@ class Groups extends Component {
 
 Groups.propTypes = {
     hideModalWindow: PropTypes.func.isRequired,
+    editGroup: PropTypes.func.isRequired,
     groups: PropTypes.object.isRequired,
 };
 

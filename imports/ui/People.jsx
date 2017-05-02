@@ -108,6 +108,7 @@ class People extends Component {
         this.setState({
             modal: <Groups
                 hideModalWindow={this.hideModalWindow.bind(this)}
+                editGroup={this.editGroup.bind(this)}
             />,
         });
     }
