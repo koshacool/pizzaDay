@@ -3,18 +3,23 @@ import ReactDOM from 'react-dom';
 import {Meteor} from 'meteor/meteor';
 import {createContainer} from 'meteor/react-meteor-data';
 import {Link, browserHistory} from 'react-router';
+
 import {Helper} from './Helper/Helper.js';
 import {Events} from '../api/events.js';
 import {Menu} from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-import {ShowWindow, HideWindow} from './Helper/ModalWindow.js';
+import FormForName from './ModalWindows/FormForName.jsx';
 
 
 // App component - represents the whole app
 class EventEdit extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            modal: '',
+            // eventName: this.props.event.text
+        }
         // this.state = {
         // 	// eventObj: false,
         // 	showAddPeople: false,
@@ -40,44 +45,27 @@ class EventEdit extends Component {
     // 	return (<People event={this.props.event} />);
     // }
 
-    changeName() {
-        let form = document.createElement('form');
-        form.action = '#';
-        form.method = 'POST';
-        form.onsubmit = (evt) => {
-            evt.preventDefault();
-            Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
-                HideWindow(); //Redirect to page for edit event
-            });
-        };
 
-        let name = document.createElement('strong');
-        name.innerHTML = 'Event Name: ';
-        form.appendChild(name);
+    hideModalWindow() {
+        this.setState({modal: ''});
+    }
 
-        let input = document.createElement('input');
-        input.type = 'text';
-        input.required = true;
-        //input.pattern = '^[a-zA-Z]+$';
-        input.value = this.props.event.text;
-        form.appendChild(input);
+    changeName(evt) {
+        evt.preventDefault();
+        Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
+            this.hideModalWindow(); //hide modal window
+        });
+    }
 
-        let button = document.createElement('button');
-        button.type = 'submit';
-        button.innerHTML = 'OK';
-        form.appendChild(button);
-
-        let cancel = document.createElement('button');
-        cancel.type = 'button';
-        cancel.innerHTML = 'Cancel';
-        cancel.onclick = (evt) => {
-            HideWindow();
-        };
-        form.appendChild(cancel);
-
-
-        ShowWindow(form);
-        //input.focus();
+    displayFormChangeName() {
+        this.setState({
+            modal: <FormForName
+                formName="Event Name: "
+                inputValue={this.props.event.text}
+                hideModalWindow={this.hideModalWindow.bind(this)}
+                formSubmit={this.changeName.bind(this)}
+            />
+        });
     }
 
     render() {
@@ -88,8 +76,8 @@ class EventEdit extends Component {
                     <div className="buttons">
                         <h2>
                             <strong>Event Name: </strong>
-                            <span id='eventName' onClick={this.changeName.bind(this)}>
-                                { this.props.event.text  }
+                            <span id='eventName' onClick={this.displayFormChangeName.bind(this)}>
+                                { this.props.event.text }
                             </span>
                         </h2>
                         <h3>
@@ -113,6 +101,7 @@ class EventEdit extends Component {
                 </div>
                     : <strong>You haven't permission to edit this event!</strong>
                     }
+                {this.state.modal}
             </div>
         );
     }

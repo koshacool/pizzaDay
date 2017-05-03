@@ -12,33 +12,65 @@ export default class User extends Component {
 
         this.state = {
             available: this.checkAvailable(),
+
         };
     }
 
     checkAvailable() {
         let status = false;
-        if (this.props.event.available.users[this.props.currentUser._id]) {
-            status = true;
+        if (this.props.event) {
+            if (this.props.event.available.users[this.props.user._id]) {
+                status = true;
+            }
+        } else {
+            status = this.checkAdded();
+        }
+
+        return status;
+    }
+
+    checkAdded() {
+        let status = false;
+        if (this.props.groupName) {
+            let currentUser = Meteor.user();
+            let group = currentUser.groups[this.props.groupName];
+            if (group[this.props.user._id]) {
+                status = true;
+            }
         }
         return status;
     }
 
     toggleAvailable() {
-        Meteor.call('events.userAvailable', this.props.currentUser._id, this.props.event._id, !this.state.available);
+        Meteor.call('events.userAvailable', this.props.user._id, this.props.event._id, !this.state.available);
         this.setState({
             available: !this.state.available,
         });
 
     }
 
-    render() {
+    addToGroup() {
+        Meteor.users.update(
+            Meteor.userId(),
+            {$set: {['groups.' + this.props.groupName + '.' + this.props.user._id]: !this.state.available } },
+            (err, result) => {
+                this.setState({
+                    available: !this.state.available,
+                });
+            });
+
+    }
+
+
+
+    showUserForEvent() {
         const taskClassName = classnames({
             unavailable: !this.state.available,
         });
 
         return (
             <div>
-                { this.props.currentUser._id != Meteor.userId() ?
+                { this.props.user._id != Meteor.userId() ?
                     <li className={taskClassName}>
                         <button
                             className="toggle-private"
@@ -47,15 +79,46 @@ export default class User extends Component {
                             { this.state.available ? 'UnAvailable' : 'Available' }
                         </button>
                         <div className='text'>
-                            <strong> { this.props.currentUser.username } </strong>
+                            <strong> { this.props.user.username } </strong>
                         </div>
                     </li>
                     : ''
                 }
             </div>
+        )
+    }
 
+    showUserForGroup() {
+        const taskClassName = classnames({
+            unavailable: !this.state.available,
+        });
 
+        return (
+            <div>
+                { this.props.user._id != Meteor.userId() ?
+                    <li className={taskClassName}>
+                        <button
+                            className="toggle-private"
+                            onClick={ this.addToGroup.bind(this) }
+                        >
+                            { this.state.available ? 'Remove' : 'Add' }
+                        </button>
+                        <div className='text'>
+                            <strong> { this.props.user.username } </strong>
+                        </div>
+                    </li>
+                    : ''
+                }
+            </div>
+        )
+    }
 
+    render() {
+
+        return (
+            <div>
+                {this.props.groupName ? this.showUserForGroup() : this.showUserForEvent()}
+            </div>
         );
     }
 }
@@ -63,7 +126,7 @@ export default class User extends Component {
 User.propTypes = {
     // This component gets the task to display through a React prop.
     // We can use propTypes to indicate it is required
-    currentUser: PropTypes.object.isRequired,
-    event: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+    event: PropTypes.object,
     // showPrivateButton: React.PropTypes.bool.isRequired,
 };

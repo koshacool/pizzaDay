@@ -104,16 +104,12 @@ export default class MenuItem extends Component {
 
 
   render() {
-	// Give tasks a different className when they are checked off,
-	// so that we can style them nicely in CSS
-
 	// console.log(this.state.ordered);
 	if (this.props.order) {
 		return this.order();
 	} else {
 		return this.editItem(); 
 	}
-	
 	
   }
 }

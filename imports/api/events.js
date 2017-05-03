@@ -35,6 +35,7 @@ Meteor.methods({
 					[Meteor.userId()]: true,
 				},
 				food: {},
+				groups: {},
 			},
 			orders: {},
 		};	
@@ -50,7 +51,7 @@ Meteor.methods({
 			throw new Meteor.Error('not-authorized');
 		}
 
-		Events.update(eventId, { $set: { text: name } });
+		return Events.update(eventId, { $set: { text: name } });
 	},
 
 	'events.remove'(eventId) {
@@ -62,7 +63,7 @@ Meteor.methods({
 	  		// If the task is private, make sure only the owner can delete it
 	 		 throw new Meteor.Error('not-authorized');
   		}
-   		Events.remove(eventId);
+		return Events.remove(eventId);
 	},
 
 	'events.findById'(eventId) {
@@ -87,7 +88,7 @@ Meteor.methods({
 		//   throw new Meteor.Error('not-authorized');
 		// }
 	
-		Events.update(eventId, { $set: { ['available.users.' + userId]: setAvailable } });	
+		return Events.update(eventId, { $set: { ['available.users.' + userId]: setAvailable } });
 	},
 
 	'events.foodAvailable'(foodId, eventId, setAvailable) {
@@ -100,8 +101,36 @@ Meteor.methods({
 		//   // If the task is private, make sure only the owner can check it off
 		//   throw new Meteor.Error('not-authorized');
 		//N }
-	
-		Events.update(eventId, { $set: { ['available.food.' + foodId]: setAvailable } });	
+
+		return Events.update(eventId, { $set: { ['available.food.' + foodId]: setAvailable } });
+	},
+
+	'events.groupAvailable'(groupName, eventId, setAvailable) {
+		check(groupName, String);
+		check(eventId, String);
+		check(setAvailable, Boolean);
+		// const item = Menu.findOne(menuId);
+
+		// if (item.private && item.owner !== this.userId) {
+		//   // If the task is private, make sure only the owner can check it off
+		//   throw new Meteor.Error('not-authorized');
+		//N }
+
+		return Events.update(eventId, { $set: { ['available.groups.' + groupName]: setAvailable } });
+	},
+
+	'events.groupRemove'(groupName, eventId) {
+		check(groupName, String);
+		check(eventId, String);
+
+		// const item = Menu.findOne(menuId);
+
+		// if (item.private && item.owner !== this.userId) {
+		//   // If the task is private, make sure only the owner can check it off
+		//   throw new Meteor.Error('not-authorized');
+		//N }
+
+		return Events.update(eventId, { $unset: { ['available.groups.' + groupName]: '' } });
 	},
 
 	'events.order'(foodId, eventId, setOrdered) {
@@ -115,11 +144,6 @@ Meteor.methods({
 		//   throw new Meteor.Error('not-authorized');
 		// }
 		var menuItem = 'orders.' + Meteor.userId() + '.order.' + foodId;
-		Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: '1'} });	
+		return Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: '1'} });
 	},
-
-
-
-
-	
 });
