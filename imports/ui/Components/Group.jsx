@@ -18,24 +18,25 @@ export default class Group extends Component {
 
     checkAdded() {
         let status = false;
-        //if (this.props.event) {
-        //    if (this.props.event.available.users[this.props.user._id]) {
-        //        status = true;
-        //    }
-        //} else {
-        //    status = this.checkAdded();
-        //}
-
+        if (this.props.event.available.groups[this.props.name]) {
+            status = true;
+        }
         return status;
     }
 
-
     toggleAdded() {
-        //Meteor.call('events.userAvailable', this.props.user._id, this.props.event._id, !this.state.available);
-        this.setState({
-            added: !this.state.added,
-        });
+        Meteor.call('events.groupAvailable', this.props.name, this.props.event._id, !this.state.added,
+            () => {
+                this.setState({
+                    added: !this.state.added,
+                });
 
+                Object.keys(this.props.group).forEach((userId) => {
+                    Meteor.call('events.userAvailable', userId, this.props.event._id, this.state.added);
+                });
+
+            }
+        );
     }
 
     deleteGroup() {
@@ -44,8 +45,8 @@ export default class Group extends Component {
             {$unset: {['groups.' + this.props.name]: 1}},
             () => console.log('removed')
         );
+        Meteor.call('events.groupRemove', this.props.name, this.props.event._id);
     }
-
 
     render() {
         console.log(this.props)
@@ -85,7 +86,8 @@ Group.propTypes = {
     // This component gets the task to display through a React prop.
     // We can use propTypes to indicate it is required
     group: PropTypes.object.isRequired,
+    event: PropTypes.object.isRequired,
     name: PropTypes.string,
-    event: PropTypes.object,
+
     // showPrivateButton: React.PropTypes.bool.isRequired,
 };

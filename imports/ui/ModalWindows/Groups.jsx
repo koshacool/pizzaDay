@@ -42,6 +42,7 @@ Groups.propTypes = {
     hideModalWindow: PropTypes.func.isRequired,
     editGroup: PropTypes.func.isRequired,
     groups: PropTypes.object.isRequired,
+    event: PropTypes.object.isRequired,
 };
 
 export default createContainer(function () {

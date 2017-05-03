@@ -109,6 +109,7 @@ class People extends Component {
             modal: <Groups
                 hideModalWindow={this.hideModalWindow.bind(this)}
                 editGroup={this.editGroup.bind(this)}
+                event={this.props.event}
             />,
         });
     }
@@ -132,6 +133,7 @@ class People extends Component {
     }
 
     render() {
+        console.log('render')
         return (
             <div className="contentBLock">
                 <div className="buttons">
@@ -143,9 +145,7 @@ class People extends Component {
                         Add Group
                     </button>
                 </div>
-                <ul>
-                    {this.renderUsers()}
-                </ul>
+                <ul>{this.renderUsers()}</ul>
                 <div>{this.state.modal}</div>
 
             </div>

@@ -35,6 +35,7 @@ Meteor.methods({
 					[Meteor.userId()]: true,
 				},
 				food: {},
+				groups: {},
 			},
 			orders: {},
 		};	
@@ -102,6 +103,34 @@ Meteor.methods({
 		//N }
 
 		return Events.update(eventId, { $set: { ['available.food.' + foodId]: setAvailable } });
+	},
+
+	'events.groupAvailable'(groupName, eventId, setAvailable) {
+		check(groupName, String);
+		check(eventId, String);
+		check(setAvailable, Boolean);
+		// const item = Menu.findOne(menuId);
+
+		// if (item.private && item.owner !== this.userId) {
+		//   // If the task is private, make sure only the owner can check it off
+		//   throw new Meteor.Error('not-authorized');
+		//N }
+
+		return Events.update(eventId, { $set: { ['available.groups.' + groupName]: setAvailable } });
+	},
+
+	'events.groupRemove'(groupName, eventId) {
+		check(groupName, String);
+		check(eventId, String);
+
+		// const item = Menu.findOne(menuId);
+
+		// if (item.private && item.owner !== this.userId) {
+		//   // If the task is private, make sure only the owner can check it off
+		//   throw new Meteor.Error('not-authorized');
+		//N }
+
+		return Events.update(eventId, { $unset: { ['available.groups.' + groupName]: '' } });
 	},
 
 	'events.order'(foodId, eventId, setOrdered) {
