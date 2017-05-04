@@ -8,13 +8,7 @@ Meteor.startup(() => {
         return Meteor.users.find({}, {fields: {username: 1, evailable: 1, groups: 1}});
     });
 
-    //Meteor.methods({
-    //    'users.createGroup'(name) {
-    //        return Meteor.users.update(Meteor.userId(), {$set: {['groups.' + evt.target[0].value]: false}});
-    //
-    //    }
-    //
-    //});
+
 
     Meteor.users.allow({
         update(userId, doc, fields, modifier) {
@@ -26,6 +20,15 @@ Meteor.startup(() => {
 
     });
 
+});
+
+Meteor.methods({
+    addUserToGroup: function(groupName, userId, state) {
+        return Meteor.users.update(
+            Meteor.userId(),
+            {$set: {['groups.' + groupName + '.' + userId]: state } }
+        );
+    }
 });
 
 

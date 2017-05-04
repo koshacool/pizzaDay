@@ -26,7 +26,7 @@ class Groups extends Component {
         }
         return (
             <div>
-                <button type="button" onClick={this.props.hideModalWindow}> OK</button>
+                <button type="button" onClick={this.props.hideModalWindow}> OK </button>
                 {groups}
             </div>
         )

@@ -49,7 +49,6 @@ export default class Group extends Component {
     }
 
     render() {
-        console.log(this.props)
         const taskClassName = classnames({
             unavailable: !this.state.added,
         });

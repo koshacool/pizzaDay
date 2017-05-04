@@ -105,8 +105,7 @@ class EventEdit extends Component {
             </div>
         );
     }
-}
-;
+};
 
 EventEdit.propTypes = {
     event: PropTypes.object.isRequired,
