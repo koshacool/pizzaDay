@@ -34,25 +34,10 @@ class People extends Component {
             return;
         }
 
-        if (!this.checkExistGroupName(newName)) {
-            alert('Such name already exist!');
-            throw new Error('bad name');
-        }
 
         let group = Meteor.user().groups[oldName];
-
-        Meteor.users.update(
-            Meteor.userId(),
-            {$unset: {['groups.' + oldName]: ''}}
-        );//Remove group ith old name
-
-        Meteor.users.update(
-            Meteor.userId(),
-            {$set: {['groups.' + newName]: group}},
-            (err, result) => {
-                this.hideModalWindow();
-                this.editGroup(newName);
-            });
+        this.checkGroupNameAndSave(newName, group);
+        Meteor.call('removeGroup', oldName);
     };
 
     checkExistGroupName(name) {
@@ -67,19 +52,18 @@ class People extends Component {
         return result;
     }
 
-    checkGroupNameAndSave(name) {
+    checkGroupNameAndSave(name, value = {}) {
         if (!this.checkExistGroupName(name)) {
             alert('Such name already exist!');
             throw new Error('bad name');
         }
 
-        Meteor.users.update(
-            Meteor.userId(),
-            {$set: {['groups.' + name]: {}}},
+        Meteor.call('createGroup', name, value,
             (err, result) => {
                 this.hideModalWindow();
                 this.editGroup(name);
-            });
+            }
+        );
     }
 
     showFormCreateGroup() {
