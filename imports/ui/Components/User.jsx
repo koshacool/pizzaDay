@@ -8,12 +8,17 @@ import {Events} from '../../api/events.js';
 export default class User extends Component {
     constructor(props) {
         super(props);
-        Meteor.subscribe('events');
+        // Meteor.subscribe('events');
 
         this.state = {
             available: this.checkAvailable(),
-
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            available: this.checkAvailable(),
+        })
     }
 
     checkAvailable() {

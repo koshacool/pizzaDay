@@ -28,9 +28,6 @@ class Groups extends Component {
         });
     }
 
-
-
-
     hideModalWindow() {
         this.setState({
             modal: '',

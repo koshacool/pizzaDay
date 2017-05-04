@@ -18,6 +18,7 @@ class People extends Component {
         super(props);
         this.state = {
             modal: '',
+            event: this.props.event,
         }
     }
 
@@ -104,16 +105,22 @@ class People extends Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            event: nextProps.event
+        })
+    }
 
 
     renderUsers() {
+        console.log(this.state.event.available.users)
         return this.props.users.map((user) => (
-            <User key={user._id} user={user} event={this.props.event}/>
+            <User key={user._id} user={user} event={this.state.event}/>
         ));
     }
 
     render() {
-        console.log('render')
+
         return (
             <div className="contentBLock">
                 <div className="buttons">
