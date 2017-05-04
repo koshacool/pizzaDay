@@ -40,11 +40,7 @@ export default class Group extends Component {
     }
 
     deleteGroup() {
-        Meteor.users.update(
-            Meteor.userId(),
-            {$unset: {['groups.' + this.props.name]: 1}},
-            () => console.log('removed')
-        );
+        Meteor.call('removeGroup', this.props.name);
         Meteor.call('events.groupRemove', this.props.name, this.props.event._id);
     }
 

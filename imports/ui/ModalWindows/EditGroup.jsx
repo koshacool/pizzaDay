@@ -27,6 +27,9 @@ export default class EditGroup extends Component {
         evt.preventDefault();
         groupName = evt.target[0].value;
         this.props.changeName(this.props.groupName, groupName);
+        this.setState({
+            modal: ''
+        });
     };
 
     displayFormChangeName() {
@@ -50,7 +53,6 @@ export default class EditGroup extends Component {
                 </strong>
                 <button onClick={this.props.hideModalWindow}> OK </button>
                 {this.props.users}
-
                 {this.state.modal}
             </div>
         )

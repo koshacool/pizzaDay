@@ -9,7 +9,6 @@ Meteor.startup(() => {
     });
 
 
-
     Meteor.users.allow({
         update(userId, doc, fields, modifier) {
             // Can only change your own documents.
@@ -23,10 +22,25 @@ Meteor.startup(() => {
 });
 
 Meteor.methods({
-    addUserToGroup: function(groupName, userId, state) {
+    createGroup: (name, value) => {
+        Meteor.users.update(
+            Meteor.userId(),
+            {$set: {['groups.' + name]: value}}
+        );
+    },
+
+    removeGroup: (name) => {
+        Meteor.users.update(
+            Meteor.userId(),
+            {$unset: {['groups.' + name]: ''}}
+        );
+    },
+
+
+    addUserToGroup: (groupName, userId, state) => {
         return Meteor.users.update(
             Meteor.userId(),
-            {$set: {['groups.' + groupName + '.' + userId]: state } }
+            {$set: {['groups.' + groupName + '.' + userId]: state}}
         );
     }
 });
