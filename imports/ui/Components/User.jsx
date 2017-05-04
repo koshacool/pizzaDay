@@ -42,23 +42,19 @@ export default class User extends Component {
     }
 
     toggleAvailable() {
-        Meteor.call('events.userAvailable', this.props.user._id, this.props.event._id, !this.state.available);
-        this.setState({
-            available: !this.state.available,
+        Meteor.call('events.userAvailable', this.props.user._id, this.props.event._id, !this.state.available, () => {
+            this.setState({
+                available: !this.state.available,
+            });
         });
-
     }
 
     addToGroup() {
-        Meteor.users.update(
-            Meteor.userId(),
-            {$set: {['groups.' + this.props.groupName + '.' + this.props.user._id]: !this.state.available } },
-            (err, result) => {
-                this.setState({
-                    available: !this.state.available,
-                });
+        Meteor.call('addUserToGroup', this.props.groupName, this.props.user._id, !this.state.available, () => {
+            this.setState({
+                available: !this.state.available,
             });
-
+        });
     }
 
 
