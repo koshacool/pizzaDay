@@ -81,7 +81,7 @@ class People extends Component {
         this.setState({
             modal: <EditGroup
                 hideModalWindow={this.hideModalWindow.bind(this)}
-                users={this.renderUsersForGroup(groupName)}
+                users={this.props.users}
                 groupName={groupName}
                 changeName={this.changeGroupName.bind(this)}
             />,
@@ -92,7 +92,7 @@ class People extends Component {
         this.setState({
             modal: <Groups
                 hideModalWindow={this.hideModalWindow.bind(this)}
-                editGroup={this.editGroup.bind(this)}
+                changeGroupName={this.changeGroupName.bind(this)}
                 event={this.props.event}
             />,
         });
@@ -104,11 +104,7 @@ class People extends Component {
         });
     }
 
-    renderUsersForGroup(groupName) {
-        return this.props.users.map((user) => (
-            <User key={user._id} user={user} groupName={groupName}/>
-        ));
-    }
+
 
     renderUsers() {
         return this.props.users.map((user) => (

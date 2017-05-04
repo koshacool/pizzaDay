@@ -44,6 +44,10 @@ export default class Group extends Component {
         Meteor.call('events.groupRemove', this.props.name, this.props.event._id);
     }
 
+    countAddedUsers() {
+        return Object.keys(this.props.group).filter((value) => this.props.group[value]).length;
+    }
+
     render() {
         const taskClassName = classnames({
             unavailable: !this.state.added,
@@ -64,11 +68,11 @@ export default class Group extends Component {
                     </button>
 
                     <div className='text'>
-                        Name: <strong> { this.props.name } </strong>
+                        Name: <strong onClick={this.props.edit}> {this.props.name} </strong>
                     </div>
 
                     <div className='text'>
-                        Total Users: {Object.keys(this.props.group).length}
+                        Total Users: {this.countAddedUsers()}
                     </div>
 
                 </li>
@@ -83,6 +87,7 @@ Group.propTypes = {
     group: PropTypes.object.isRequired,
     event: PropTypes.object.isRequired,
     name: PropTypes.string,
+    edit: PropTypes.func,
 
     // showPrivateButton: React.PropTypes.bool.isRequired,
 };

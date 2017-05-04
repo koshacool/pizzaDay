@@ -43,16 +43,23 @@ export default class EditGroup extends Component {
         });
     }
 
+    renderUsersForGroup() {
+        let name = this.props.groupName;
+        return this.props.users.map((user) => (
+            <User key={user._id} user={user} groupName={name}/>
+        ));
+    }
+
     showGroup() {
         return (
             <div>
                 <strong>Event Name:
                     <span id='eventName' onClick={this.displayFormChangeName.bind(this)}>
-                               {this.props.groupName}
-                            </span>
+                       {this.props.groupName}
+                    </span>
                 </strong>
                 <button onClick={this.props.hideModalWindow}> OK </button>
-                {this.props.users}
+                {this.renderUsersForGroup()}
                 {this.state.modal}
             </div>
         )
@@ -60,7 +67,8 @@ export default class EditGroup extends Component {
 
 
     render() {
-        return <ModalWindowBase content={this.showGroup()} />
+        console.log(Meteor.user().groups[this.props.groupName])
+        return <ModalWindowBase content={this.showGroup()}/>
     }
 
 
