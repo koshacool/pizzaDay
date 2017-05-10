@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
+
 export const Events = new Mongo.Collection('events');
 
 if (Meteor.isServer) {
@@ -19,10 +20,10 @@ Meteor.methods({
 		// Make sure the user is logged in before inserting a task
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
-		}	 
+		}
 
 		let obj = {
-			text,	  
+			text,
 			owner: {
 				_id: Meteor.userId(),
 				username: Meteor.user().username,
@@ -38,7 +39,7 @@ Meteor.methods({
 				groups: {},
 			},
 			orders: {},
-		};	
+		};
 
 		// return Events.insert(obj);
 		return Events.findOne({_id: Events.insert(obj)});
@@ -82,12 +83,12 @@ Meteor.methods({
   		check(eventId, String);
 		check(setAvailable, Boolean);
 		// const item = Menu.findOne(menuId);
-	
+
 		// if (item.private && item.owner !== this.userId) {
 		//   // If the task is private, make sure only the owner can check it off
 		//   throw new Meteor.Error('not-authorized');
 		// }
-	
+
 		return Events.update(eventId, { $set: { ['available.users.' + userId]: setAvailable } });
 	},
 
@@ -96,7 +97,7 @@ Meteor.methods({
   		check(eventId, String);
 		check(setAvailable, Boolean);
 		// const item = Menu.findOne(menuId);
-	
+
 		// if (item.private && item.owner !== this.userId) {
 		//   // If the task is private, make sure only the owner can check it off
 		//   throw new Meteor.Error('not-authorized');
@@ -133,17 +134,17 @@ Meteor.methods({
 		return Events.update(eventId, { $unset: { ['available.groups.' + groupName]: '' } });
 	},
 
-	'events.order'(foodId, eventId, setOrdered) {
+	'events.order'(foodId, eventId, setOrdered, number) {
   		check(foodId, String);
   		check(eventId, String);
 		check(setOrdered, Boolean);
 		// const item = Menu.findOne(menuId);
-	
+
 		// if (item.private && item.owner !== this.userId) {
 		//   // If the task is private, make sure only the owner can check it off
 		//   throw new Meteor.Error('not-authorized');
 		// }
 		var menuItem = 'orders.' + Meteor.userId() + '.order.' + foodId;
-		return Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: '1'} });
+		 Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: number} });
 	},
 });

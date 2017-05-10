@@ -120,8 +120,9 @@ Food.propTypes = {
 export default createContainer((params) => {
     Meteor.subscribe('menu');
     Meteor.subscribe('events');
+
     return {
-        event: Events.findOne(params.params.event),
+        event: params.event || Events.findOne(params.params.event),
         menuItems: Menu.find({}, {sort: {createdAt: -1}}).fetch(),
         // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user(),
