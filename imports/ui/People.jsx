@@ -113,14 +113,13 @@ class People extends Component {
 
 
     renderUsers() {
-        console.log(this.state.event.available.users)
         return this.props.users.map((user) => (
             <User key={user._id} user={user} event={this.state.event}/>
         ));
     }
 
     render() {
-
+        console.log(this.props.users)
         return (
             <div className="contentBLock">
                 <div className="buttons">
@@ -134,18 +133,16 @@ class People extends Component {
                 </div>
                 <ul>{this.renderUsers()}</ul>
                 <div>{this.state.modal}</div>
-
             </div>
         );
     }
-
 };
 
 People.propTypes = {
     users: PropTypes.array.isRequired,
     event: PropTypes.object.isRequired,
     // incompleteCount: PropTypes.number.isRequired,
-    groups: PropTypes.object.isRequired,
+    groups: PropTypes.object,
 };
 
 export default createContainer(function (params) {

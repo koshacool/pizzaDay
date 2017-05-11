@@ -34,7 +34,7 @@ class Event extends Component {
         return (
             <li className={eventClassName}>
 		<span className="text">
-		 {this.props.event.owner.username}: <strong>{this.props.event.text}</strong>
+		 {Meteor.user().profile.name}: <strong>{this.props.event.text}</strong>
 		</span> 
 		<span className="text">
 		  Users: <strong>{ Helper.countEvailableItems(this.props.event.available.users) }</strong>
