@@ -147,4 +147,21 @@ Meteor.methods({
 		var menuItem = 'orders.' + Meteor.userId() + '.order.' + foodId;
 		 Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: number} });
 	},
+
+	'events.userOrderStatus'(eventId, status) {
+		check(eventId, String);
+		check(status, String);
+
+		var order = 'orders.' + Meteor.userId() + '.order';
+		Events.update(eventId, { $set: { [order + '.status']: status } });
+	},
+
+	'events.orderStatus'(eventId, status) {
+		check(eventId, String);
+		check(status, String);
+
+
+		Events.update(eventId, { $set: { 'status': status } });
+	},
+
 });

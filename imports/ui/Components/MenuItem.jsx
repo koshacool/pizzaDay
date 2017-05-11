@@ -82,8 +82,12 @@ export default class MenuItem extends Component {
     }
 
     countNumber() {
-        let order = this.props.event.orders[Meteor.userId()].order;
-        return order[this.props.menuItem._id].number;
+        let orders = this.props.event.orders;
+        console.log(orders)
+        if (orders[Meteor.userId()] && orders[Meteor.userId()].order[this.props.menuItem._id]) {
+            return orders[Meteor.userId()].order[this.props.menuItem._id].number;
+        }
+        return 1;
     }
 
     deleteThisItem() {

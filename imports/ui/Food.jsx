@@ -43,10 +43,16 @@ class Food extends Component {
     }
 
     renderMenu() {
-        return this.props.menuItems.map((item) => (
-            <MenuItem key={item._id} menuItem={item} event={this.props.event} order={this.props.order}
-                      onSelect={this.props.onSelect}/>
-        ));
+        let menuItems = this.props.menuItems;
+        if (this.props.order) {
+            menuItems = menuItems.filter((item) => this.props.event.available.food[item._id]);
+        }
+
+        return menuItems
+            .map((item) => (
+                <MenuItem key={item._id} menuItem={item} event={this.props.event} order={this.props.order}
+                          onSelect={this.props.onSelect}/>
+            ));
     }
 
     render() {
@@ -56,45 +62,45 @@ class Food extends Component {
 
                     <div>
                         { !this.props.order ?
-                            <form className="new-task" onSubmit={this.addMenuItem.bind(this)}>
-                                <div>
-                                    Name: <input
-                                    id="itemName"
-                                    name="itemName"
-                                    type="text"
-                                    value={this.state.itemName}
-                                    placeholder="Type to add new menu item"
-                                    required
-                                    onChange={Helper.handleInputChange.bind(this)}
+                        <form className="new-task" onSubmit={this.addMenuItem.bind(this)}>
+                            <div>
+                                Name: <input
+                                id="itemName"
+                                name="itemName"
+                                type="text"
+                                value={this.state.itemName}
+                                placeholder="Type to add new menu item"
+                                required
+                                onChange={Helper.handleInputChange.bind(this)}
 
-                                />
-                                </div>
+                            />
+                            </div>
 
-                                <div>
-                                    Price: <input
-                                    id="price"
-                                    name="price"
-                                    type="text"
-                                    value={this.state.price}
-                                    placeholder="Type price"
-                                    required
-                                    type="text"
-                                    pattern="\d+"
+                            <div>
+                                Price: <input
+                                id="price"
+                                name="price"
+                                type="text"
+                                value={this.state.price}
+                                placeholder="Type price"
+                                required
+                                type="text"
+                                pattern="^\d+(?:[\.]\d{1,2})?$"
 
-                                    onChange={Helper.handleInputChange.bind(this)}
-                                />
-                                </div>
+                                onChange={Helper.handleInputChange.bind(this)}
+                            />
+                            </div>
 
-                                <input
-                                    className="addItem"
-                                    id="addItem"
-                                    name="addItem"
-                                    type="submit"
-                                    value="Add"
-                                />
+                            <input
+                                className="addItem"
+                                id="addItem"
+                                name="addItem"
+                                type="submit"
+                                value="Add"
+                            />
 
-                            </form> : ''
-                        }
+                        </form> : ''
+                            }
 
                         <ul>
                             {this.renderMenu()}
@@ -113,7 +119,7 @@ class Food extends Component {
 Food.propTypes = {
     event: PropTypes.object.isRequired,
     menuItems: PropTypes.array.isRequired,
-    // incompleteCount: PropTypes.number.isRequired,
+    order: PropTypes.bool,
     currentUser: PropTypes.object,
 };
 

@@ -20,8 +20,6 @@ class App extends Component {
 
 
     renderEvents() {
-        // console.log(this.props.events);
-
         return this.props.events.map((event) => (
             <Event key={event._id} event={event} />
         ));
@@ -44,9 +42,7 @@ class App extends Component {
             </div>
         )
     }
-
-}
-;
+};
 
 App.propTypes = {
     events: PropTypes.array.isRequired,

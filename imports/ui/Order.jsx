@@ -18,6 +18,8 @@ class Order extends Component {
         this.state = {
             totalPrice: this.countTotalPrice(),
         };
+
+        this.setStatusOrdered = this.setStatusOrdered.bind(this);
     }
 
     // getEventForEdit() {
@@ -41,7 +43,7 @@ class Order extends Component {
             }
         }
 
-        return price;
+        return price.toFixed(2);
     }
 
     changePrice() {
@@ -50,17 +52,47 @@ class Order extends Component {
         });
     }
 
+    setStatusOrdered() {
+        Meteor.call('events.userOrderStatus', this.props.event._id, 'ordered', (err, result) => {
+            console.log(this.props.event);
+            if (this.checkEventStatus()) {
+                Meteor.call('events.orderStatus', this.props.event._id, 'ordered', (err, result) => {
+                    browserHistory.push('/');
+                })
+            } else {
+                browserHistory.push('/');
+            }
+
+
+        });
+
+    }
+
+    checkEventStatus() {
+        let orders = this.props.event.orders;
+        let availebleUsers = this.props.event.available.users;
+        availebleUsers = Object.keys(availebleUsers)
+            .filter((userId) => availebleUsers[userId]);
+
+        return availebleUsers.every((userId) => {
+            let result = false;
+            if (orders[userId] && orders[userId].order.status == 'ordered') {
+                result = true;
+            }
+            return result;
+        })
+    }
+
     showFood() {
         return (<Food event={this.props.event} order={true} onSelect={ this.changePrice.bind(this) }/>);
     }
 
     render() {
-
         return (
             <div className="container">
                 { this.props.event ?
                 <div className="contentBLock">
-
+                    <button onClick={this.setStatusOrdered}> Make Order </button>
                     <div>Your price: {this.state.totalPrice} grn.</div>
                     <div>
                         {this.showFood()}
@@ -70,8 +102,7 @@ class Order extends Component {
             </div>
         );
     }
-}
-;
+};
 
 Order.propTypes = {
     event: PropTypes.object.isRequired,
