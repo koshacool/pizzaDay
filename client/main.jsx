@@ -26,8 +26,8 @@ Meteor.startup(() => {
             </Route>
 
 
-
             <Route path='*' component={NotFound}/>
 
-        </Router>, document.getElementById('render-target'));
+        </Router>,
+        document.getElementById('render-target'));
 });
