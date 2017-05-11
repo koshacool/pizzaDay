@@ -5,7 +5,7 @@ import '../imports/api/events.js';
 
 Meteor.startup(() => {
     Meteor.publish('usersList', function () {
-        return Meteor.users.find({}, {fields: {username: 1, 'services.google.email': 1, evailable: 1, groups: 1}});
+        return Meteor.users.find({}, {fields: {username: 1, 'services.google.email': 1, 'profile': 1, evailable: 1, groups: 1}});
     });
 
 
