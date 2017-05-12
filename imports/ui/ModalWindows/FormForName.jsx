@@ -23,7 +23,6 @@ export default class FormForName extends Component {
     }
 
     createForm() {
-        console.log(this.props.formName)
         return (
             <form
                 action="#"

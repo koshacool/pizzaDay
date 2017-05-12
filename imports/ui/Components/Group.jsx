@@ -64,7 +64,7 @@ export default class Group extends Component {
                         className="toggle-private"
                         onClick={ this.toggleAdded.bind(this) }
                     >
-                        { this.state.added ? 'Remove' : 'Add' }
+                        { this.state.added ? 'UnAvailable' : 'Available' }
                     </button>
 
                     <div className='text'>

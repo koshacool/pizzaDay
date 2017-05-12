@@ -27,6 +27,7 @@ Meteor.methods({
 			owner: {
 				_id: Meteor.userId(),
 				name: Meteor.user().profile.name,
+				email: Meteor.user().services.google.email,
 			},
 			createdAt: new Date(),
 			status: 'ordering',

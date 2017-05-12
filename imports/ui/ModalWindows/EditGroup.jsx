@@ -9,7 +9,6 @@ import {Helper} from '../Helper/Helper.js';
 import User from '../Components/User.jsx';
 
 
-// App component - represents the whole app
 export default class EditGroup extends Component {
     constructor(props) {
         super(props);
@@ -65,13 +64,9 @@ export default class EditGroup extends Component {
         )
     }
 
-
     render() {
-        console.log(Meteor.user().groups[this.props.groupName])
         return <ModalWindowBase content={this.showGroup()}/>
     }
-
-
 };
 
 EditGroup.propTypes = {

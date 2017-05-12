@@ -8,7 +8,7 @@ import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-//import Header from './Header.jsx';
+
 
 
 // App component - represents the whole app
@@ -21,14 +21,6 @@ class Order extends Component {
 
         this.setStatusOrdered = this.setStatusOrdered.bind(this);
     }
-
-    // getEventForEdit() {
-    // 	Meteor.call('events.findById', this.props.params.event, (err, result) => {
-    // 		this.setState({
-    // 			eventObj: result,
-    // 		});
-    // 	});
-    // }
 
     countTotalPrice() {
         var price = 0;
@@ -54,9 +46,15 @@ class Order extends Component {
 
     setStatusOrdered() {
         Meteor.call('events.userOrderStatus', this.props.event._id, 'ordered', (err, result) => {
-            console.log(this.props.event);
             if (this.checkEventStatus()) {
                 Meteor.call('events.orderStatus', this.props.event._id, 'ordered', (err, result) => {
+                    Meteor.call(
+                        'sendEmail',
+                        this.props.event.owner.email,
+                        'PizzaDAY@exapmle.com',
+                        'PizzaDAY: ' + this.props.event.text,
+                        'All people ordered!'
+                    );
                     browserHistory.push('/');
                 })
             } else {
@@ -88,11 +86,12 @@ class Order extends Component {
     }
 
     render() {
+        console.log(this.props.event)
         return (
             <div className="container">
                 { this.props.event ?
                 <div className="contentBLock">
-                    <button onClick={this.setStatusOrdered}> Make Order </button>
+                    <button onClick={this.setStatusOrdered}> Confirm </button>
                     <div>Your price: {this.state.totalPrice} grn.</div>
                     <div>
                         {this.showFood()}

@@ -47,6 +47,16 @@ class EventNew extends Component {
 							placeholder="Type new event name"
 							onChange={ Helper.handleInputChange.bind(this) }
 						/>
+						<br />
+						<strong>Date: </strong>
+						<input
+								id="date"
+								name="date"
+								type="datetime-local"
+								value={this.state.eventName}
+								onChange={Helper.handleInputChange.bind(this)}
+						/>
+						<br />
 						<div className="buttons">
 							<button			
 								className="addEvent"
