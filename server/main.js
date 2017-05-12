@@ -5,7 +5,7 @@ import '../imports/api/events.js';
 
 Meteor.startup(() => {
     Meteor.publish('usersList', function () {
-        return Meteor.users.find({}, {fields: {username: 1, evailable: 1, groups: 1}});
+        return Meteor.users.find({}, {fields: {username: 1, 'services.google.email': 1, 'profile': 1, evailable: 1, groups: 1}});
     });
 
 
@@ -16,6 +16,13 @@ Meteor.startup(() => {
             console.log('UPDATE USER');
             return true;
         },
+
+        //remove(userId, doc, fields, modifier) {
+        //    // Can only change your own documents.
+        //    //return doc._id === userId;
+        //    console.log('Remove USER');
+        //    return true;
+        //},
 
     });
 
@@ -36,13 +43,22 @@ Meteor.methods({
         );
     },
 
-
     addUserToGroup: (groupName, userId, state) => {
         return Meteor.users.update(
             Meteor.userId(),
             {$set: {['groups.' + groupName + '.' + userId]: state}}
         );
-    }
+    },
+
+
+
+    //removeAllPosts: () => {
+    //    console.log('Removed all users')
+    //    return Meteor.users.remove({});
+    //},
+
+
+
 });
 
 

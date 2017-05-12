@@ -35,9 +35,10 @@ class Groups extends Component {
     }
 
     renderGroups() {
-        let keys = Object.keys(this.props.groups);
-        let groups = 'You haven\'t any groups!';
-        if (keys.length > 0) {
+        let groups = ' You haven\'t any groups!';
+        console.log(this.props.groups)
+        if (Object.keys(this.props.groups).length > 0) {
+            let keys = Object.keys(this.props.groups);
             groups = keys.map((groupName, i) => (
                 <Group key={i} name={groupName} group={this.props.groups[groupName]} event={this.props.event} edit={this.editGroup.bind(this, groupName)} />
             ));
@@ -59,7 +60,7 @@ class Groups extends Component {
 Groups.propTypes = {
     hideModalWindow: PropTypes.func.isRequired,
     changeGroupName: PropTypes.func.isRequired,
-    groups: PropTypes.object.isRequired,
+    groups: PropTypes.object,
     event: PropTypes.object.isRequired,
 };
 

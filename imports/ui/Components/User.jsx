@@ -80,7 +80,7 @@ export default class User extends Component {
                             { this.state.available ? 'UnAvailable' : 'Available' }
                         </button>
                         <div className='text'>
-                            <strong> { this.props.user.username } </strong>
+                            <strong> { this.props.user.profile.name } </strong>
                         </div>
                     </li>
                     : ''
@@ -105,7 +105,7 @@ export default class User extends Component {
                             { this.state.available ? 'Remove' : 'Add' }
                         </button>
                         <div className='text'>
-                            <strong> { this.props.user.username } </strong>
+                            <strong> { this.props.user.profile.name } </strong>
                         </div>
                     </li>
                     : ''
@@ -115,7 +115,7 @@ export default class User extends Component {
     }
 
     render() {
-
+        //console.log(this.props.user)
         return (
             <div>
                 {this.props.groupName ? this.showUserForGroup() : this.showUserForEvent()}

@@ -26,8 +26,7 @@ Meteor.methods({
 			text,
 			owner: {
 				_id: Meteor.userId(),
-				username: Meteor.user().username,
-
+				name: Meteor.user().profile.name,
 			},
 			createdAt: new Date(),
 			status: 'ordering',
