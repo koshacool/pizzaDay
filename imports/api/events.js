@@ -15,7 +15,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-	'events.insert'(text) {
+	'events.insert'(text, date, time) {
 		check(text, String);
 		// Make sure the user is logged in before inserting a task
 		if (!this.userId) {
@@ -24,6 +24,7 @@ Meteor.methods({
 
 		let obj = {
 			text,
+			date: new Date(date + ' ' + time),
 			owner: {
 				_id: Meteor.userId(),
 				name: Meteor.user().profile.name,

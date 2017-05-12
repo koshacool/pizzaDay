@@ -26,8 +26,10 @@ class Event extends Component {
     }
 
     render() {
+        console.log(this.state.status)
         const eventClassName = classnames({
-            complete: (this.props.event.status == 'delivered'),
+            complete: (this.state.status == 'ordered'),
+
         });
         let foodCount = Menu.find({['available.' + this.props.event._id]: {$ne: false}}).count();
 
@@ -45,19 +47,23 @@ class Event extends Component {
 		  <span className="text">
 		  Status: <strong>{this.state.status}</strong>
 		</span>
-
+                {this.state.status === 'ordering' ?
                 <div className="divInline">
                     <Link to={"/event/order/" + this.props.event._id}> Make Order </Link>
                 </div>
+                    : ''}
                 { this.props.event.owner._id == Meteor.userId() ?
                 <div className="divInline">
                     <button className="delete" onClick={this.deleteThisEvent.bind(this)}>
                         &times;
                     </button>
+
                     <button className="edit">
                         <Link to={"/event/" + this.props.event._id}> Edit </Link>
                     </button>
 
+
+                </div>
                 </div>
                     : ''
                     }

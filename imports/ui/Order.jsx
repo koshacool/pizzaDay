@@ -53,7 +53,7 @@ class Order extends Component {
                         this.props.event.owner.email,
                         'PizzaDAY@exapmle.com',
                         'PizzaDAY: ' + this.props.event.text,
-                        'All people ordered!'
+                        'All people ordered! Total Price: '
                     );
                     browserHistory.push('/');
                 })
