@@ -111,7 +111,6 @@ class People extends Component {
         })
     }
 
-
     renderUsers() {
         return this.props.users.map((user) => (
             <User key={user._id} user={user} event={this.state.event}/>
