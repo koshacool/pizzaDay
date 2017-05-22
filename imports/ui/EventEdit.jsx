@@ -68,10 +68,10 @@ class EventEdit extends Component {
         });
     }
 
-    render() {
-        return (
-            <div className="container">
-                { this.props.currentUser._id === this.props.event.owner._id ?
+    renderEditEvent() {
+       return (
+           <div className="container">
+            { this.props.currentUser._id === this.props.event.owner._id ?
                 <div className="contentBLock">
                     <div className="buttons">
                         <h2>
@@ -99,9 +99,21 @@ class EventEdit extends Component {
                         { this.props.children }
                     </div>
                 </div>
-                    : <strong>You haven't permission to edit this event!</strong>
-                    }
-                {this.state.modal}
+                : <strong>You haven't permission to edit this event!</strong>
+            }
+            {this.state.modal}
+        </div>
+       )
+    }
+
+    render() {
+
+        return (
+            <div>
+            { this.props.event ?
+                this.renderEditEvent()
+                : 'Bad id. Such event doesn\'t exist!'
+            }
             </div>
         );
     }

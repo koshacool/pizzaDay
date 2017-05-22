@@ -98,7 +98,14 @@ ul {
   font-size: 1em;
   border: none;
   position: relative;
+  display: none;
 }
+
+.event:hover .delete{
+  display: inline;
+}
+
+
 
 li {
   position: relative;

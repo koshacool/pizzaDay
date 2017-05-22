@@ -11,24 +11,17 @@ import {Helper} from '../Helper/Helper.js';
 class Event extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            status: this.checkStatus()
-        };
     }
 
     deleteThisEvent() {
         Meteor.call('events.remove', this.props.event._id);
     }
 
-    checkStatus() {
-        return this.props.event.status;
-    }
-
     render() {
-        console.log(this.state.status)
+       let { status } = this.props.event;
         const eventClassName = classnames({
-            complete: (this.state.status == 'ordered'),
+            complete: (status == 'ordered'),
+            event: true
 
         });
         let foodCount = Menu.find({['available.' + this.props.event._id]: {$ne: false}}).count();
@@ -43,7 +36,7 @@ class Event extends Component {
 
                     <ul className="changeStatus">
                         <li>
-                            <strong className="status">{this.state.status}</strong>
+                            <strong className="status">{status}</strong>
                             <ul>
                                 <li>ordering</li>
                                 <li>ordered</li>
@@ -55,7 +48,7 @@ class Event extends Component {
 
 		        </span>
 
-                {this.state.status === 'ordering' ?
+                {status === 'ordering' ?
                     <div className="divInline">
                         <Link to={"/event/order/" + this.props.event._id}> Make Order </Link>
                     </div>

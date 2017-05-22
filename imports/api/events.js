@@ -161,7 +161,6 @@ Meteor.methods({
 		check(eventId, String);
 		check(status, String);
 
-
 		Events.update(eventId, { $set: { 'status': status } });
 	},
 
