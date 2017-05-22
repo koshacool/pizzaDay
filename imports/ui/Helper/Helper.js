@@ -1,7 +1,17 @@
 import { Menu } from '../../api/menu.js';
 
 export const Helper = {
-    countEvailableItems (object) {
+    countEvailableUsers (object) {
+        let counter = 0;
+        for (let key in object) {
+            if (object[key].status) {
+                counter++;
+            }
+        }
+        return counter;
+    },
+
+    countEvailableFood (object) {
         let counter = 0;
         for (let key in object) {
             if (object[key]) {
@@ -40,8 +50,6 @@ export const Helper = {
         })
     },
 
-
-
     countUserTotalPrice(event, userId) {
         var price = 0;
         let userOrder = event.orders[userId];
@@ -58,15 +66,16 @@ export const Helper = {
         return price;
     },
 
+    getAvailableUsers(users) {
+        return Object.keys(users).filter((id) => users[id].status);
+    },
+
     countAllPrice(event) {
-        availableUsers = Object.keys(event.available.users).filter((id) => event.available.users[id]);
+        availableUsers = this.getAvailableUsers(event.available.users);
         return availableUsers.reduce((prev, userId) =>
                 prev + this.countUserTotalPrice(event, userId)
              , 0).toFixed(2);
     }
-
-
-
 
 };
 

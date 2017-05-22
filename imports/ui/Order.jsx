@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Link, browserHistory } from 'react-router';
+
 import { Helper } from './Helper/Helper.js';
 import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
@@ -20,6 +21,7 @@ class Order extends Component {
         this.checkAllUsersOrdered = Helper.checkAllUsersOrdered.bind(this);
         this.countUserTotalPrice = Helper.countUserTotalPrice.bind(this);
         this.countAllPrice = Helper.countAllPrice.bind(this);
+        this.getAvailableUsers = Helper.getAvailableUsers.bind(this);
 
         this.state = {
             totalPrice: this.countUserTotalPrice(this.props.event, Meteor.userId()),

@@ -11,11 +11,14 @@ import Header from './Elements/Header.jsx';
 class App extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             itemName: '',
             price: '',
         };
     }
+
+
 
     renderEvents() {
         return this.props.events.map((event) => (
@@ -54,7 +57,7 @@ export default createContainer(() => {
         events: Events.find({
                 $or: [
                     {'owner._id': Meteor.userId()},
-                    {['available.users.' + Meteor.userId()]: true}]
+                    {['available.users.' + Meteor.userId() + '.status']: true}]
             },
             {sort: {createdAt: -1}}).fetch(),
         // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),

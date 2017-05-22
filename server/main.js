@@ -7,14 +7,13 @@ import '../imports/api/events.js';
 
 
 Meteor.startup(() => {
-    //process.env.MAIL_URL = 'smtp://MY_MANDRILL_EMAIL:MY_MANDRILL_API_KEY@smtp.mandrillapp.com:587';
-
+    //Settings for send email
     process.env.MAIL_URL = 'smtp://' +
         'postmaster@sandboxc9f396b7ccbf40deaab05fafbe31d275.mailgun.org:' +
         '8fb20b9094f27b6ad34ddc5d9b33520c@' +
         'smtp.mailgun.org:587';
 
-//Settings for google auth
+    //Settings for google auth
     ServiceConfiguration.configurations.remove({service: 'google'});
     ServiceConfiguration.configurations.insert({
         service: 'google',
@@ -55,7 +54,6 @@ Meteor.startup(() => {
 });
 
 Meteor.methods({
-
     createGroup: (name, value) => {
         Meteor.users.update(
             Meteor.userId(),
