@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import {Meteor} from 'meteor/meteor';
-//import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import {createContainer} from 'meteor/react-meteor-data';
 
 import {Events} from '../api/events.js';
@@ -12,11 +11,13 @@ import Header from './Elements/Header.jsx';
 class App extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             itemName: '',
             price: '',
         };
     }
+
 
 
     renderEvents() {
@@ -56,7 +57,7 @@ export default createContainer(() => {
         events: Events.find({
                 $or: [
                     {'owner._id': Meteor.userId()},
-                    {['available.users.' + Meteor.userId()]: true}]
+                    {['available.users.' + Meteor.userId() + '.status']: true}]
             },
             {sort: {createdAt: -1}}).fetch(),
         // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),

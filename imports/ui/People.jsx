@@ -118,7 +118,6 @@ class People extends Component {
     }
 
     render() {
-        console.log(this.props.users)
         return (
             <div className="contentBLock">
                 <div className="buttons">

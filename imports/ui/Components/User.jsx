@@ -23,9 +23,10 @@ export default class User extends Component {
 
     checkAvailable() {
         let status = false;
-        if (this.props.event) {
-            if (this.props.event.available.users[this.props.user._id]) {
-                status = true;
+        let event = this.props.event;
+        if (event) {
+            if (event.available.users[this.props.user._id]) {
+                status = event.available.users[this.props.user._id].status;
             }
         } else {
             status = this.checkAdded();
@@ -47,7 +48,7 @@ export default class User extends Component {
     }
 
     toggleAvailable() {
-        Meteor.call('events.userAvailable', this.props.user._id, this.props.event._id, !this.state.available, () => {
+        Meteor.call('events.userAvailable', this.props.user, this.props.event._id, !this.state.available, (err, res) => {
             this.setState({
                 available: !this.state.available,
             });

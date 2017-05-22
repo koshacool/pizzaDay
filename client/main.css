@@ -98,7 +98,14 @@ ul {
   font-size: 1em;
   border: none;
   position: relative;
+  display: none;
 }
+
+.event:hover .delete{
+  display: inline;
+}
+
+
 
 li {
   position: relative;
@@ -224,3 +231,30 @@ a {
   padding: 20px;
   opacity: 1;
 }
+
+
+
+strong {
+  margin-right: 10px;
+}
+
+.changeStatus {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+.changeStatus li {display: inline-block;}
+.changeStatus li:hover {background: #777; cursor: pointer;}
+.changeStatus li:hover ul {display: block;}
+.changeStatus li ul {
+  position: absolute;
+  width: 100px;
+  display: none;
+  z-index: 101;
+}
+.changeStatus li ul li {
+  background: #777;
+  display: block;
+}
+.changeStatus li ul li a {display:block !important;}
+.changeStatus li ul li:hover {background: #656; cursor: pointer;}

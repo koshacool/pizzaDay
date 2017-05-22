@@ -18,33 +18,8 @@ class EventEdit extends Component {
         super(props);
         this.state = {
             modal: '',
-            // eventName: this.props.event.text
         }
-        // this.state = {
-        // 	// eventObj: false,
-        // 	showAddPeople: false,
-        // 	showAddMenu: false,
-        // };
-        // console.log(this.props.event)
-        // this.props.params.event ? this.getEventForEdit() : '';
     }
-
-    // getEventForEdit() {
-    // 	Meteor.call('events.findById', this.props.params.event, (err, result) => {
-    // 		this.setState({
-    // 			eventObj: result,
-    // 		});
-    // 	});
-    // }
-
-    // showFood() {
-    // 	return (<Food event={this.props.event} />);
-    // }
-    //
-    // showPeople() {
-    // 	return (<People event={this.props.event} />);
-    // }
-
 
     hideModalWindow() {
         this.setState({modal: ''});
@@ -68,10 +43,10 @@ class EventEdit extends Component {
         });
     }
 
-    render() {
-        return (
-            <div className="container">
-                { this.props.currentUser._id === this.props.event.owner._id ?
+    renderEditEvent() {
+       return (
+           <div className="container">
+            { this.props.currentUser._id === this.props.event.owner._id ?
                 <div className="contentBLock">
                     <div className="buttons">
                         <h2>
@@ -82,14 +57,14 @@ class EventEdit extends Component {
                         </h2>
                         <h3>
                             <strong> Total people: </strong>
-                            { Helper.countEvailableItems(this.props.event.available.users) }
+                            { Helper.countEvailableUsers(this.props.event.available.users) }
                             <button>
                                 <Link to={'/event/' + this.props.event._id + '/people'}> Add People </Link>
                             </button>
                         </h3>
                         <h3>
                             <strong>Total
-                                food: </strong> { Helper.countEvailableItems(this.props.event.available.food) }
+                                food: </strong> { Helper.countEvailableFood(this.props.event.available.food) }
                             <button>
                                 <Link to={'/event/' + this.props.event._id + '/food'}> Add Food </Link>
                             </button>
@@ -99,9 +74,21 @@ class EventEdit extends Component {
                         { this.props.children }
                     </div>
                 </div>
-                    : <strong>You haven't permission to edit this event!</strong>
-                    }
-                {this.state.modal}
+                : <strong>You haven't permission to edit this event!</strong>
+            }
+            {this.state.modal}
+        </div>
+       )
+    }
+
+    render() {
+
+        return (
+            <div>
+            { this.props.event ?
+                this.renderEditEvent()
+                : 'Bad id. Such event doesn\'t exist!'
+            }
             </div>
         );
     }

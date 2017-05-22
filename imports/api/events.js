@@ -15,7 +15,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-	'events.insert'(text) {
+	'events.insert'(text, date, time) {
 		check(text, String);
 		// Make sure the user is logged in before inserting a task
 		if (!this.userId) {
@@ -24,15 +24,21 @@ Meteor.methods({
 
 		let obj = {
 			text,
+			date: new Date(date + ' ' + time),
 			owner: {
 				_id: Meteor.userId(),
 				name: Meteor.user().profile.name,
+				email: Meteor.user().services.google.email,
 			},
 			createdAt: new Date(),
 			status: 'ordering',
 			available: {
 				users: {
-					[Meteor.userId()]: true,
+					[Meteor.userId()]: {
+						status: true,
+						name: Meteor.user().profile.name,
+						email: Meteor.user().services.google.email,
+					},
 				},
 				food: {},
 				groups: {},
@@ -77,8 +83,8 @@ Meteor.methods({
    		return event;
 	},
 
-	'events.userAvailable'(userId, eventId, setAvailable) {
-  		check(userId, String);
+	'events.userAvailable'(user, eventId, setAvailable) {
+		check(user, Object);
   		check(eventId, String);
 		check(setAvailable, Boolean);
 		// const item = Menu.findOne(menuId);
@@ -88,7 +94,15 @@ Meteor.methods({
 		//   throw new Meteor.Error('not-authorized');
 		// }
 
-		return Events.update(eventId, { $set: { ['available.users.' + userId]: setAvailable } });
+		return Events.update(eventId, {
+			$set: {
+				['available.users.' + user._id]: {
+					status: setAvailable,
+					name: user.profile.name,
+					email: user.services.google.email,
+				}
+			}
+		});
 	},
 
 	'events.foodAvailable'(foodId, eventId, setAvailable) {
@@ -158,7 +172,6 @@ Meteor.methods({
 	'events.orderStatus'(eventId, status) {
 		check(eventId, String);
 		check(status, String);
-
 
 		Events.update(eventId, { $set: { 'status': status } });
 	},

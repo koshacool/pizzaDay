@@ -1,5 +1,17 @@
+import { Menu } from '../../api/menu.js';
+
 export const Helper = {
-    countEvailableItems (object) {
+    countEvailableUsers (object) {
+        let counter = 0;
+        for (let key in object) {
+            if (object[key].status) {
+                counter++;
+            }
+        }
+        return counter;
+    },
+
+    countEvailableFood (object) {
         let counter = 0;
         for (let key in object) {
             if (object[key]) {
@@ -23,41 +35,47 @@ export const Helper = {
         document.body.removeChild(document.getElementById('modalDiv'));
     },
 
-    createElementDom(name, attributes = null, children = null) {
-        //Concatination object params for style atributes
-        function concatStyle(obj) {
-            var params = '';
-            for (var key in obj) {
-                params += key + ': ' + obj[key] + ';';
-            }
-            return params;
-        };
-        var elem = document.createElement(name);//Create element
+    checkAllUsersOrdered(event) {
+        let orders = event.orders;
+        let availebleUsers = event.available.users;
+        availebleUsers = Object.keys(availebleUsers)
+            .filter((userId) => availebleUsers[userId]);
 
-        if (attributes) {//Sets attributes for this element
-            for (var key in attributes) {
-                (attributes[key] instanceof Object) ?
-                    elem[key] = concatStyle(attributes[key])//If value is object - concatination it
-                    :
-                    elem[key] = attributes[key];
+        return availebleUsers.every((userId) => {
+            let result = false;
+            if (orders[userId] && orders[userId].order.status == 'ordered') {
+                result = true;
             }
-        }
-
-        if (children) { //Add child elements to this element
-            if (Array.isArray(children)) {
-                children.forEach((item) => {
-                    (typeof item === 'string') ?
-                        elem.appendChild(document.createTextNode(item))
-                        :
-                        elem.appendChild(item);
-                });
-            } else {
-                elem.textContent = children;
-            }
-        }
-
-        return elem;
+            return result;
+        })
     },
+
+    countUserTotalPrice(event, userId) {
+        var price = 0;
+        let userOrder = event.orders[userId];
+
+        if (userOrder) {
+            for (var menuId in userOrder.order) {
+                if (userOrder.order[menuId].status) {
+                    let menuObj = Menu.findOne(menuId);
+                    price += menuObj.price * userOrder.order[menuId].number;
+                }
+            }
+        }
+
+        return price;
+    },
+
+    getAvailableUsers(users) {
+        return Object.keys(users).filter((id) => users[id].status);
+    },
+
+    countAllPrice(event) {
+        availableUsers = this.getAvailableUsers(event.available.users);
+        return availableUsers.reduce((prev, userId) =>
+                prev + this.countUserTotalPrice(event, userId)
+             , 0).toFixed(2);
+    }
 
 };
 

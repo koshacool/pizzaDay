@@ -3,88 +3,63 @@ import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Link, browserHistory } from 'react-router';
+
 import { Helper } from './Helper/Helper.js';
 import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-//import Header from './Header.jsx';
+
 
 
 // App component - represents the whole app
 class Order extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            totalPrice: this.countTotalPrice(),
-        };
 
         this.setStatusOrdered = this.setStatusOrdered.bind(this);
-    }
+        this.checkAllUsersOrdered = Helper.checkAllUsersOrdered.bind(this);
+        this.countUserTotalPrice = Helper.countUserTotalPrice.bind(this);
+        this.countAllPrice = Helper.countAllPrice.bind(this);
+        this.getAvailableUsers = Helper.getAvailableUsers.bind(this);
 
-    // getEventForEdit() {
-    // 	Meteor.call('events.findById', this.props.params.event, (err, result) => {
-    // 		this.setState({
-    // 			eventObj: result,
-    // 		});
-    // 	});
-    // }
-
-    countTotalPrice() {
-        var price = 0;
-        let userOrder = this.props.event.orders[Meteor.userId()];
-
-        if (userOrder) {
-            for (var menuId in userOrder.order) {
-                if (userOrder.order[menuId].status) {
-                    let menuObj = Menu.findOne(menuId);
-                    price += menuObj.price * userOrder.order[menuId].number;
-                }
-            }
-        }
-
-        return price.toFixed(2);
+        this.state = {
+            totalPrice: this.countUserTotalPrice(this.props.event, Meteor.userId()),
+        };
     }
 
     changePrice() {
         this.setState({
-            totalPrice: this.countTotalPrice(),
+            totalPrice: this.countUserTotalPrice(this.props.event, Meteor.userId()),
         });
     }
 
     setStatusOrdered() {
+        let event = this.props.event;
         Meteor.call('events.userOrderStatus', this.props.event._id, 'ordered', (err, result) => {
-            console.log(this.props.event);
-            if (this.checkEventStatus()) {
+            if (this.checkAllUsersOrdered(this.props.event)) {
                 Meteor.call('events.orderStatus', this.props.event._id, 'ordered', (err, result) => {
+                    Meteor.call(
+                        'sendEmail',
+                        this.props.event.owner.email,
+                        'PizzaDAY@exapmle.com',
+                        'PizzaDAY: ' + this.props.event.text,
+                        'All people ordered! Total Price: ' + this.countAllPrice(event),
+                    );
                     browserHistory.push('/');
                 })
             } else {
                 browserHistory.push('/');
             }
-
-
         });
-
-    }
-
-    checkEventStatus() {
-        let orders = this.props.event.orders;
-        let availebleUsers = this.props.event.available.users;
-        availebleUsers = Object.keys(availebleUsers)
-            .filter((userId) => availebleUsers[userId]);
-
-        return availebleUsers.every((userId) => {
-            let result = false;
-            if (orders[userId] && orders[userId].order.status == 'ordered') {
-                result = true;
-            }
-            return result;
-        })
     }
 
     showFood() {
-        return (<Food event={this.props.event} order={true} onSelect={ this.changePrice.bind(this) }/>);
+        return (<Food event={this.props.event}
+                      order={true}
+                      onSelect={ this.changePrice.bind(this) }
+                />
+        );
     }
 
     render() {
@@ -92,8 +67,8 @@ class Order extends Component {
             <div className="container">
                 { this.props.event ?
                 <div className="contentBLock">
-                    <button onClick={this.setStatusOrdered}> Make Order </button>
-                    <div>Your price: {this.state.totalPrice} grn.</div>
+                    <button onClick={this.setStatusOrdered}> Confirm </button>
+                    <div>Your price: {this.state.totalPrice.toFixed(2)} grn.</div>
                     <div>
                         {this.showFood()}
                     </div>
