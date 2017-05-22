@@ -1,10 +1,10 @@
-import React, { Component, PropTypes } from 'react';
-import { Meteor } from 'meteor/meteor';
+import React, {Component, PropTypes} from 'react';
+import {Meteor} from 'meteor/meteor';
 import classnames from 'classnames';
-import { createContainer } from 'meteor/react-meteor-data';
-import { Link } from 'react-router';
+import {createContainer} from 'meteor/react-meteor-data';
+import {Link} from 'react-router';
 
-import { Menu } from '../../api/menu.js';
+import {Menu} from '../../api/menu.js';
 import {Helper} from '../Helper/Helper.js';
 
 // Task component - represents a single todo item
@@ -35,38 +35,46 @@ class Event extends Component {
 
         return (
             <li className={eventClassName}>
-		<span className="text">
-		 {this.props.event.owner.name}: <strong>{this.props.event.text}</strong>
-		</span> 
-		<span className="text">
-		  Users: <strong>{ Helper.countEvailableItems(this.props.event.available.users) }</strong>
-		</span>   
-		<span className="text">
-		  Food: <strong>{Helper.countEvailableItems(this.props.event.available.food)}</strong>
-		</span>
-		  <span className="text">
-		  Status: <strong>{this.state.status}</strong>
-		</span>
+		        <span className="text">
+		            {this.props.event.owner.name}: <strong>{this.props.event.text}</strong>
+		            Users: <strong>{ Helper.countEvailableItems(this.props.event.available.users) }</strong>
+		            Food: <strong>{Helper.countEvailableItems(this.props.event.available.food)}</strong>
+                    Status:
+
+                    <ul className="changeStatus">
+                        <li>
+                            <strong className="status">{this.state.status}</strong>
+                            <ul>
+                                <li>ordering</li>
+                                <li>ordered</li>
+                                <li>delivering</li>
+                                <li>delivered</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+		        </span>
+
                 {this.state.status === 'ordering' ?
-                <div className="divInline">
-                    <Link to={"/event/order/" + this.props.event._id}> Make Order </Link>
-                </div>
+                    <div className="divInline">
+                        <Link to={"/event/order/" + this.props.event._id}> Make Order </Link>
+                    </div>
                     : ''}
                 { this.props.event.owner._id == Meteor.userId() ?
-                <div className="divInline">
-                    <button className="delete" onClick={this.deleteThisEvent.bind(this)}>
-                        &times;
-                    </button>
+                    <div className="divInline">
+                        <button className="delete" onClick={this.deleteThisEvent.bind(this)}>
+                            &times;
+                        </button>
 
-                    <button className="edit">
-                        <Link to={"/event/" + this.props.event._id}> Edit </Link>
-                    </button>
+                        <button className="edit">
+                            <Link to={"/event/" + this.props.event._id}> Edit </Link>
+                        </button>
 
 
-                </div>
-                </div>
+                    </div>
+
                     : ''
-                    }
+                }
             </li>
         );
     }
