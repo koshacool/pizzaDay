@@ -48,16 +48,18 @@ export default class Group extends Component {
         return Object.keys(this.props.group).filter((value) => this.props.group[value]).length;
     }
 
+
     render() {
         const taskClassName = classnames({
             unavailable: !this.state.added,
+            group: true,
         });
 
         return (
             <div>
                 <li className={taskClassName}>
                     <button className="delete" onClick={this.deleteGroup.bind(this)}>
-                        &times;
+                       &times;
                     </button>
 
                     <button

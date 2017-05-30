@@ -94,7 +94,7 @@ class Event extends Component {
     render() {
        let { status } = this.props.event;
         const eventClassName = classnames({
-            complete: (status == 'ordered'),
+            complete: (status === 'delivered'),
             event: true
 
         });
