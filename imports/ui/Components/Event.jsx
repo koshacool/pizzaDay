@@ -13,6 +13,7 @@ class Event extends Component {
         this.countUserTotalPrice = Helper.countUserTotalPrice.bind(this);
         this.countAllPrice = Helper.countAllPrice.bind(this);
         this.getAvailableUsers = Helper.getAvailableUsers.bind(this);
+        this.getUserOrderNames = Helper.getUserOrderNames.bind(this);
     }
 
     deleteThisEvent() {
@@ -23,10 +24,11 @@ class Event extends Component {
         let {event} = this.props;
         let users = this.getAvailableUsers(event.available.users);
 
+
         let detailedPrice = users.reduce((prev, userId) => {
             prev[event.available.users[userId].name] = {
                 price: this.countUserTotalPrice(event, userId),
-                order: 'test',
+                order: this.getUserOrderNames(event, userId),
             };
             return prev;
         }, {});
@@ -34,17 +36,17 @@ class Event extends Component {
         return detailedPrice;
     }
 
+    
     sendPriceToUsers() {
         let {event} = this.props;
         let users = this.getAvailableUsers(event.available.users);
 
-        users.forEach((userId) => {
-            let price = this.countUserTotalPrice(event, userId);
+        users.forEach((userId) => {            
             this.sendEmail(
                 'Your order: ',
                 JSON.stringify({
-                    price,
-                    order: 'test',
+                    price: this.countUserTotalPrice(event, userId),
+                    order: this.getUserOrderNames(event, userId),
                 })
             );
         });
