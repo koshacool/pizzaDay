@@ -93,10 +93,11 @@ class Event extends Component {
 
     render() {
        let { status } = this.props.event;
+       let complete = status === 'delivered';
         const eventClassName = classnames({
-            complete: (status === 'delivered'),
-            event: true
-
+            complete,
+            event: true,
+            complete,
         });
 
         let owner = this.props.event.owner._id === Meteor.userId();
@@ -110,7 +111,7 @@ class Event extends Component {
 		            {this.props.event.owner.name}: <strong>{this.props.event.text}</strong>
 		            Users: <strong>{ Helper.countEvailableUsers(this.props.event.available.users) }</strong>
 		            Food: <strong>{Helper.countEvailableFood(this.props.event.available.food)}</strong>
-                    Status: {!owner ? <strong className="status">{status}</strong> :
+                    Status: {!owner || complete ? <strong className="status">{status}</strong> :
                     <ul className="changeStatus">
                         <li>
                             <strong className="status">{status}</strong>
@@ -136,9 +137,13 @@ class Event extends Component {
                             &times;
                         </button>
 
+                       {complete ? 
+                        '' 
+                        :
                         <button className="edit">
                             <Link to={"/event/" + this.props.event._id}> Edit </Link>
                         </button>
+                        }
 
 
                     </div>

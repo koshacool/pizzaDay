@@ -15,18 +15,42 @@ class App extends Component {
         this.state = {
             itemName: '',
             price: '',
+            hideCompleted: false,
         };
+
+        this.toggleHideCompleted = this.toggleHideCompleted.bind(this);
     }
 
-
+    toggleHideCompleted() {
+        this.setState({
+            hideCompleted: !this.state.hideCompleted
+        });
+    }
 
     renderEvents() {
-        return this.props.events.map((event) => (
-            <Event key={event._id} event={event} />
-        ));
+        let {events} = this.props;
+        let {hideCompleted} = this.state;
+
+        if (hideCompleted) {
+            events = events.filter((event) => event.status !== 'delivered');
+        }
+
+        return (
+            
+              <div>
+                <label className="hideCompleted">
+                    <input type="checkbox" onChange={this.toggleHideCompleted}/> 
+                    hide completed
+                </label>
+                {events.map((event) => (          
+                    <Event key={event._id} event={event} />
+                ))}
+             </div>
+        )
+       
     }
 
-    render() {
+    render() {        
         return (
             <div className="container">
                 <Header />
