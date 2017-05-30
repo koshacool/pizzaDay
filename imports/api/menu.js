@@ -66,6 +66,18 @@ Meteor.methods({
 	Menu.update(menuId, { $set: { ['available.' + eventId]: setAvailable } });	
 },
 
+'menu.getById'(_id) {
+  	check(_id, String);
+	// const item = Menu.findOne(menuId);
+	
+	// if (item.private && item.owner !== this.userId) {
+	//   // If the task is private, make sure only the owner can check it off
+	//   throw new Meteor.Error('not-authorized');
+	// }
+	
+	return Menu.find({_id}, {text: 1, price: 1});	
+},
+
 
 
 });

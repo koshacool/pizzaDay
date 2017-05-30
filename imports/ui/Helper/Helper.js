@@ -66,6 +66,25 @@ export const Helper = {
         return price;
     },
 
+    getUserOrderNames(event, userId) {        
+        let userOrder = event.orders[userId];
+        let orderItems = {};
+        if (userOrder) {
+            for (var menuId in userOrder.order) {
+                if (userOrder.order[menuId].status) {
+                    let menuObj = Menu.findOne(menuId);
+                    orderItems[menuObj.text] = `${userOrder.order[menuId].number} pieces`;
+                    //  {
+                    //     Auantity: userOrder.order[menuId].number,
+                    //     Price: userOrder.order[menuId].price,
+                    // };
+                }
+            }
+        }
+
+        return orderItems;
+    },
+
     getAvailableUsers(users) {
         return Object.keys(users).filter((id) => users[id].status);
     },
