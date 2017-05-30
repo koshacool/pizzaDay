@@ -118,8 +118,12 @@ class People extends Component {
     }
 
     render() {
+        const existUsers = this.props.users.length > 1;
         return (
+
             <div className="contentBLock">
+                {existUsers ?
+                    <div>
                 <div className="buttons">
                     <button onClick={this.showFormCreateGroup.bind(this)}>
                         Great Group
@@ -131,6 +135,10 @@ class People extends Component {
                 </div>
                 <ul>{this.renderUsers()}</ul>
                 <div>{this.state.modal}</div>
+                </div>
+                :
+                    <center>'You are only one registered user!'</center>
+                }
             </div>
         );
     }

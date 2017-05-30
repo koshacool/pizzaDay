@@ -101,7 +101,7 @@ ul {
   display: none;
 }
 
-.event:hover .delete{
+.event:hover .delete, .group:hover .delete{
   display: inline;
 }
 

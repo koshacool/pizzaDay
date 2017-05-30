@@ -95,7 +95,7 @@ class EventEdit extends Component {
 };
 
 EventEdit.propTypes = {
-    event: PropTypes.object.isRequired,
+    event: PropTypes.object,
     // incompleteCount: PropTypes.number.isRequired,
     currentUser: PropTypes.object,
     // countUsers: PropTypes.number.isRequired,
