@@ -258,3 +258,7 @@ strong {
 }
 .changeStatus li ul li a {display:block !important;}
 .changeStatus li ul li:hover {background: #656; cursor: pointer;}
+
+.complete {
+  background-color: #F5F5F5
+} 
