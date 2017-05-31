@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
@@ -30,8 +31,11 @@ class Order extends Component {
         };
     }
 
-    countUserTotalPrice( ) {
-        const {event, discounts} = this.props;
+    countUserTotalPrice(discounts = false) {
+        if (!discounts) {
+            discounts = this.props.discounts;
+        }
+        const {event} = this.props;
         const userId =  Meteor.userId();
         let price = 0;
         let userOrder = event.orders[userId];
@@ -92,6 +96,11 @@ class Order extends Component {
         );
     }
 
+    componentWillReceiveProps(nextProps) {        
+            this.setState({
+                totalPrice: this.countUserTotalPrice(nextProps.discounts),
+            });        
+    }
 
 
     render() {
@@ -116,6 +125,7 @@ Order.propTypes = {
     event: PropTypes.object.isRequired,
     discounts: PropTypes.array.isRequired,
 };
+
 
 export default createContainer((params) => {
     Meteor.subscribe('discount.by.eventId', params.params.event);
