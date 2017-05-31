@@ -9,6 +9,7 @@ import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
+import {Discount} from '../api/discount.js';
 
 
 
@@ -19,18 +20,47 @@ class Order extends Component {
 
         this.setStatusOrdered = this.setStatusOrdered.bind(this);
         this.checkAllUsersOrdered = Helper.checkAllUsersOrdered.bind(this);
-        this.countUserTotalPrice = Helper.countUserTotalPrice.bind(this);
+        this.countUserTotalPrice = this.countUserTotalPrice.bind(this);
         this.countAllPrice = Helper.countAllPrice.bind(this);
         this.getAvailableUsers = Helper.getAvailableUsers.bind(this);
-
+        
         this.state = {
-            totalPrice: this.countUserTotalPrice(this.props.event, Meteor.userId()),
+            totalPrice: this.countUserTotalPrice(),
+            gettedDiscounts: false,
         };
     }
 
+    countUserTotalPrice( ) {
+        const {event, discounts} = this.props;
+        const userId =  Meteor.userId();
+        let price = 0;
+        let userOrder = event.orders[userId];
+        
+        if (userOrder) {
+            for (var menuId in userOrder.order) {
+                if (userOrder.order[menuId].status) {
+                    let menuObj = Menu.findOne(menuId);
+
+                    let discount = discounts.filter((discount) => {
+                        return discount.foodId === menuId;
+                    })
+
+                    if (discount.length > 0) {
+                        price += (menuObj.price - discount[0].discount) * userOrder.order[menuId].number;                       
+                    } else {
+                        price += menuObj.price * userOrder.order[menuId].number;
+                    }   
+                }
+            }
+        }
+
+        return price;
+    }
+
+
     changePrice() {
         this.setState({
-            totalPrice: this.countUserTotalPrice(this.props.event, Meteor.userId()),
+            totalPrice: this.countUserTotalPrice(),
         });
     }
 
@@ -62,7 +92,10 @@ class Order extends Component {
         );
     }
 
+
+
     render() {
+        
         return (
             <div className="container">
                 { this.props.event ?
@@ -81,21 +114,18 @@ class Order extends Component {
 
 Order.propTypes = {
     event: PropTypes.object.isRequired,
-    // incompleteCount: PropTypes.number.isRequired,
-
-    // countUsers: PropTypes.number.isRequired,
+    discounts: PropTypes.array.isRequired,
 };
 
 export default createContainer((params) => {
+    Meteor.subscribe('discount.by.eventId', params.params.event);
     Meteor.subscribe('events');
     Meteor.subscribe('menu');
-    Meteor.subscribe('usersList');
+    Meteor.subscribe('usersList');    
 
     return {
+        discounts: Discount.find().fetch(),
         event: Events.findOne(params.params.event),
-        // countUsers: Meteor.users.find().count(),
-        // events: Menu.find({}, { sort: { createdAt: -1 } }).fetch(),
-        // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
-
+        
     };
 }, Order);

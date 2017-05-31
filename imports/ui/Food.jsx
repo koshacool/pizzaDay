@@ -5,7 +5,7 @@ import {createContainer} from 'meteor/react-meteor-data';
 //import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import {Link} from 'react-router';
 import {Events} from '../api/events.js';
-
+import {Discount} from '../api/discount.js';
 import {Menu} from '../api/menu.js';
 import MenuItem from './Components/MenuItem.jsx';
 import {Helper} from './Helper/Helper.js';
@@ -20,6 +20,7 @@ class Food extends Component {
         this.state = {
             itemName: '',
             price: '',
+            
         };
     }
 
@@ -50,8 +51,12 @@ class Food extends Component {
 
         return menuItems
             .map((item) => (
-                <MenuItem key={item._id} menuItem={item} event={this.props.event} order={this.props.order}
-                          onSelect={this.props.onSelect}/>
+                <MenuItem key={item._id} menuItem={item} 
+                            event={this.props.event} 
+                            order={this.props.order}
+                            onSelect={this.props.onSelect}
+                            discounts={this.props.discounts}
+                          />
             ));
     }
 
@@ -106,8 +111,8 @@ class Food extends Component {
                             {this.renderMenu()}
                         </ul>
                     </div>
-
-
+                        
+                    
                 </div>
             </div>
         );
@@ -119,18 +124,28 @@ class Food extends Component {
 Food.propTypes = {
     event: PropTypes.object.isRequired,
     menuItems: PropTypes.array.isRequired,
+    discounts: PropTypes.array.isRequired,
     order: PropTypes.bool,
     currentUser: PropTypes.object,
+    
 };
 
-export default createContainer((params) => {
+export default createContainer((params) => {    
+    function getEventId(params) {
+        if (params.event) {
+            return params.event._id;
+        }
+        return params.params.event;
+    } 
     Meteor.subscribe('menu');
     Meteor.subscribe('events');
-
+    Meteor.subscribe('discount.by.eventId', getEventId(params));
     return {
         event: params.event || Events.findOne(params.params.event),
         menuItems: Menu.find({}, {sort: {createdAt: -1}}).fetch(),
         // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user(),
+        discounts: Discount.find().fetch(),
+
     };
 }, Food);

@@ -37,11 +37,13 @@ class Groups extends Component {
     renderGroups() {
         let groups = ' You haven\'t any groups!';
 
-        if (this.props.groups && Object.keys(this.props.groups).length > 0) {
-            let keys = Object.keys(this.props.groups);
-            groups = keys.map((groupName, i) => (
+        if (this.props.groups) {
+            if (Object.keys(this.props.groups).length > 0) {
+               let keys = Object.keys(this.props.groups);
+                groups = keys.map((groupName, i) => (
                 <Group key={i} name={groupName} group={this.props.groups[groupName]} event={this.props.event} edit={this.editGroup.bind(this, groupName)} />
-            ));
+                )); 
+            }            
         }
 
         return (

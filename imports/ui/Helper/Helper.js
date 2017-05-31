@@ -1,4 +1,5 @@
 import { Menu } from '../../api/menu.js';
+import { Discount } from '../../api/discount.js';
 
 export const Helper = {
     countEvailableUsers (object) {

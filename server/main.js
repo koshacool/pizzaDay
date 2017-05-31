@@ -4,6 +4,7 @@ import {Email} from 'meteor/email'
 
 import '../imports/api/menu.js';
 import '../imports/api/events.js';
+import '../imports/api/discount.js';
 
 
 Meteor.startup(() => {
