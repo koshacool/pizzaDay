@@ -41,24 +41,28 @@ class Event extends Component {
         let {event} = this.props;
         let users = this.getAvailableUsers(event.available.users);
 
-        users.forEach((userId) => {            
-            this.sendEmail(
-                'Your order: ',
-                JSON.stringify({
-                    price: this.countUserTotalPrice(event, userId),
-                    order: this.getUserOrderNames(event, userId),
-                })
-            );
+        users.forEach((userId) => {           
+            if (event.orders[userId].order.status === 'ordered') {
+                 console.log(event.available.users[userId].email)
+                this.sendEmail(
+                    'Your order: ',
+                    JSON.stringify({
+                        price: this.countUserTotalPrice(event, userId),
+                        order: this.getUserOrderNames(event, userId),                    
+                    }),
+                    event.available.users[userId].email,
+                );
+            }            
         });
 
     }
 
 
-    sendEmail(text, data) {
+    sendEmail(text, data, email) {
         let {event} = this.props;
         Meteor.call(
             'sendEmail',
-            event.owner.email,
+             email,
             'PizzaDAY@exapmle.com',
             'PizzaDAY: ' + event.text,
             text + data,
@@ -75,13 +79,15 @@ class Event extends Component {
                 case('ordered'):
                     this.sendEmail(
                         'All people ordered! Total Price: ',
-                        JSON.stringify(detailedPrice)
+                        JSON.stringify(detailedPrice),
+                        event.owner.email,
                     );
                     break;
                 case('delivered'):
                     this.sendEmail(
                         'All people ordered! Total Price: ',
-                        JSON.stringify(detailedPrice)
+                        JSON.stringify(detailedPrice),
+                        event.owner.email,
                     );
                     this.sendPriceToUsers();
                     break;
