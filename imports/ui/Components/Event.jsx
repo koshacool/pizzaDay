@@ -41,9 +41,10 @@ class Event extends Component {
         let {event} = this.props;
         let users = this.getAvailableUsers(event.available.users);
 
-        users.forEach((userId) => {           
-            if (event.orders[userId].order.status === 'ordered') {
-                 console.log(event.available.users[userId].email)
+        users.forEach((userId) => {         
+            let order = event.orders[userId].order;
+            if (order && order.status === 'ordered') {
+                console.log(event.available.users[userId].email)
                 this.sendEmail(
                     'Your order: ',
                     JSON.stringify({
