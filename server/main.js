@@ -38,17 +38,9 @@ Meteor.startup(() => {
     Meteor.users.allow({
         update(userId, doc, fields, modifier) {
             // Can only change your own documents.
-            //return doc._id === userId;
             console.log('UPDATE USER');
-            return true;
+            return doc._id === userId;;
         },
-
-        //remove(userId, doc, fields, modifier) {
-        //    // Can only change your own documents.
-        //    //return doc._id === userId;
-        //    console.log('Remove USER');
-        //    return true;
-        //},
 
     });
 
@@ -85,11 +77,6 @@ Meteor.methods({
         Email.send({to, from, subject, text});
     },
 
-
-    //removeAllPosts: () => {
-    //    console.log('Removed all users')
-    //    return Meteor.users.remove({});
-    //},
 
 
 });

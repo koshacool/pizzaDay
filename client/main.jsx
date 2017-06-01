@@ -4,7 +4,6 @@ import {render} from 'react-dom';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 
 import '../imports/startup/accounts-config.js';
-
 import App from '../imports/ui/App.jsx';
 import NotFound from '../imports/ui/Elements/NotFound.jsx';
 import Food from '../imports/ui/Food.jsx';
