@@ -6,174 +6,176 @@ import { check } from 'meteor/check';
 export const Events = new Mongo.Collection('events');
 
 if (Meteor.isServer) {
-  // This code only runs on the server
-  // Only publish tasks that are public or belong to the current user
-  Meteor.publish('events', function eventPublication() {
-  	return Events.find();
-  });
+    Meteor.publish('events', function eventPublication() {
+        if (!this.userId) {
+            return this.ready();
+        }
+
+        return Events.find();
+    });
 
 }
 
 Meteor.methods({
-	'events.insert'(text, date, time) {
-		check(text, String);
-		// Make sure the user is logged in before inserting a task
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
+    'events.insert'(text, date, time) {
+        check(text, String);
 
-		let obj = {
-			text,
-			date: new Date(date + ' ' + time),
-			owner: {
-				_id: Meteor.userId(),
-				name: Meteor.user().profile.name,
-				email: Meteor.user().services.google.email,
-			},
-			createdAt: new Date(),
-			status: 'ordering',
-			available: {
-				users: {
-					[Meteor.userId()]: {
-						status: true,
-						name: Meteor.user().profile.name,
-						email: Meteor.user().services.google.email,
-					},
-				},
-				food: {},
-				groups: {},
-			},
-			orders: {},
-		};
+        if (!this.userId) {
+            throw new Meteor.Error('not-authorized');
+        }
 
-		// return Events.insert(obj);
-		return Events.findOne({_id: Events.insert(obj)});
-	},
+        let obj = {
+            text,
+            date: new Date(date + ' ' + time),
+            owner: {
+                _id: Meteor.userId(),
+                name: Meteor.user().profile.name,
+                email: Meteor.user().services.google.email,
+            },
+            createdAt: new Date(),
+            status: 'ordering',
+            available: {
+                users: {
+                    [Meteor.userId()]: {
+                        status: true,
+                        name: Meteor.user().profile.name,
+                        email: Meteor.user().services.google.email,
+                    },
+                },
+                food: {},
+                groups: {},
+            },
+            orders: {},
+        };
 
-	'events.changeName'(eventId, name) {
-		check(name, String);
-		// Make sure the user is logged in before inserting a task
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
+        // return Events.insert(obj);
+        return Events.findOne({_id: Events.insert(obj)});
+    },
 
-		return Events.update(eventId, { $set: { text: name } });
-	},
+    'events.changeName'(eventId, name) {
+        check(name, String);
+        // Make sure the user is logged in before inserting a task
+        if (!this.userId) {
+            throw new Meteor.Error('not-authorized');
+        }
 
-	'events.remove'(eventId) {
-		check(eventId, String);
+        return Events.update(eventId, {$set: {text: name}});
+    },
 
-		const event = Events.findOne(eventId);
-		// console.log(this.userId);
-		if (event.owner._id !== this.userId) {
-	  		// If the task is private, make sure only the owner can delete it
-	 		 throw new Meteor.Error('not-authorized');
-  		}
-		return Events.remove(eventId);
-	},
+    'events.remove'(eventId) {
+        check(eventId, String);
 
-	'events.findById'(eventId) {
-		check(eventId, String);
+        const event = Events.findOne(eventId);
+        // console.log(this.userId);
+        if (event.owner._id !== this.userId) {
+            // If the task is private, make sure only the owner can delete it
+            throw new Meteor.Error('not-authorized');
+        }
+        return Events.remove(eventId);
+    },
 
-		const event = Events.findOne(eventId);
-		if (event.owner._id !== this.userId) {
-	  		// If the task is private, make sure only the owner can delete it
-	 		 throw new Meteor.Error('You haven\'t access to this event');
-  		}
-   		return event;
-	},
+    'events.findById'(eventId) {
+        check(eventId, String);
 
-	'events.userAvailable'(user, eventId, setAvailable) {
-		check(user, Object);
-  		check(eventId, String);
-		check(setAvailable, Boolean);
-		// const item = Menu.findOne(menuId);
+        const event = Events.findOne(eventId);
+        if (event.owner._id !== this.userId) {
+            // If the task is private, make sure only the owner can delete it
+            throw new Meteor.Error('You haven\'t access to this event');
+        }
+        return event;
+    },
 
-		// if (item.private && item.owner !== this.userId) {
-		//   // If the task is private, make sure only the owner can check it off
-		//   throw new Meteor.Error('not-authorized');
-		// }
+    'events.userAvailable'(user, eventId, setAvailable) {
+        check(user, Object);
+        check(eventId, String);
+        check(setAvailable, Boolean);
+        // const item = Menu.findOne(menuId);
 
-		return Events.update(eventId, {
-			$set: {
-				['available.users.' + user._id]: {
-					status: setAvailable,
-					name: user.profile.name,
-					email: user.services.google.email,
-				}
-			}
-		});
-	},
+        // if (item.private && item.owner !== this.userId) {
+        //   // If the task is private, make sure only the owner can check it off
+        //   throw new Meteor.Error('not-authorized');
+        // }
 
-	'events.foodAvailable'(foodId, eventId, setAvailable) {
-  		check(foodId, String);
-  		check(eventId, String);
-		check(setAvailable, Boolean);
-		// const item = Menu.findOne(menuId);
+        return Events.update(eventId, {
+            $set: {
+                ['available.users.' + user._id]: {
+                    status: setAvailable,
+                    name: user.profile.name,
+                    email: user.services.google.email,
+                }
+            }
+        });
+    },
 
-		// if (item.private && item.owner !== this.userId) {
-		//   // If the task is private, make sure only the owner can check it off
-		//   throw new Meteor.Error('not-authorized');
-		//N }
+    'events.foodAvailable'(foodId, eventId, setAvailable) {
+        check(foodId, String);
+        check(eventId, String);
+        check(setAvailable, Boolean);
+        // const item = Menu.findOne(menuId);
 
-		return Events.update(eventId, { $set: { ['available.food.' + foodId]: setAvailable } });
-	},
+        // if (item.private && item.owner !== this.userId) {
+        //   // If the task is private, make sure only the owner can check it off
+        //   throw new Meteor.Error('not-authorized');
+        //N }
 
-	'events.groupAvailable'(groupName, eventId, setAvailable) {
-		check(groupName, String);
-		check(eventId, String);
-		check(setAvailable, Boolean);
-		// const item = Menu.findOne(menuId);
+        return Events.update(eventId, {$set: {['available.food.' + foodId]: setAvailable}});
+    },
 
-		// if (item.private && item.owner !== this.userId) {
-		//   // If the task is private, make sure only the owner can check it off
-		//   throw new Meteor.Error('not-authorized');
-		//N }
+    'events.groupAvailable'(groupName, eventId, setAvailable) {
+        check(groupName, String);
+        check(eventId, String);
+        check(setAvailable, Boolean);
+        // const item = Menu.findOne(menuId);
 
-		return Events.update(eventId, { $set: { ['available.groups.' + groupName]: setAvailable } });
-	},
+        // if (item.private && item.owner !== this.userId) {
+        //   // If the task is private, make sure only the owner can check it off
+        //   throw new Meteor.Error('not-authorized');
+        //N }
 
-	'events.groupRemove'(groupName, eventId) {
-		check(groupName, String);
-		check(eventId, String);
+        return Events.update(eventId, {$set: {['available.groups.' + groupName]: setAvailable}});
+    },
 
-		// const item = Menu.findOne(menuId);
+    'events.groupRemove'(groupName, eventId) {
+        check(groupName, String);
+        check(eventId, String);
 
-		// if (item.private && item.owner !== this.userId) {
-		//   // If the task is private, make sure only the owner can check it off
-		//   throw new Meteor.Error('not-authorized');
-		//N }
+        // const item = Menu.findOne(menuId);
 
-		return Events.update(eventId, { $unset: { ['available.groups.' + groupName]: '' } });
-	},
+        // if (item.private && item.owner !== this.userId) {
+        //   // If the task is private, make sure only the owner can check it off
+        //   throw new Meteor.Error('not-authorized');
+        //N }
 
-	'events.order'(foodId, eventId, setOrdered, number) {
-  		check(foodId, String);
-  		check(eventId, String);
-		check(setOrdered, Boolean);
-		// const item = Menu.findOne(menuId);
+        return Events.update(eventId, {$unset: {['available.groups.' + groupName]: ''}});
+    },
 
-		// if (item.private && item.owner !== this.userId) {
-		//   // If the task is private, make sure only the owner can check it off
-		//   throw new Meteor.Error('not-authorized');
-		// }
-		var menuItem = 'orders.' + Meteor.userId() + '.order.' + foodId;
-		 Events.update(eventId, { $set: { [menuItem + '.status']: setOrdered,  [menuItem + '.number']: number} });
-	},
+    'events.order'(foodId, eventId, setOrdered, number) {
+        check(foodId, String);
+        check(eventId, String);
+        check(setOrdered, Boolean);
+        // const item = Menu.findOne(menuId);
 
-	'events.userOrderStatus'(eventId, status) {
-		check(eventId, String);
-		check(status, String);
+        // if (item.private && item.owner !== this.userId) {
+        //   // If the task is private, make sure only the owner can check it off
+        //   throw new Meteor.Error('not-authorized');
+        // }
+        var menuItem = 'orders.' + Meteor.userId() + '.order.' + foodId;
+        Events.update(eventId, {$set: {[menuItem + '.status']: setOrdered, [menuItem + '.number']: number}});
+    },
 
-		var order = 'orders.' + Meteor.userId() + '.order';
-		Events.update(eventId, { $set: { [order + '.status']: status } });
-	},
+    'events.userOrderStatus'(eventId, status) {
+        check(eventId, String);
+        check(status, String);
 
-	'events.orderStatus'(eventId, status) {
-		check(eventId, String);
-		check(status, String);
+        var order = 'orders.' + Meteor.userId() + '.order';
+        Events.update(eventId, {$set: {[order + '.status']: status}});
+    },
 
-		Events.update(eventId, { $set: { 'status': status } });
-	},
+    'events.orderStatus'(eventId, status) {
+        check(eventId, String);
+        check(status, String);
+
+        Events.update(eventId, {$set: {'status': status}});
+    },
 
 });

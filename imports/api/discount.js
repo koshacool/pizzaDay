@@ -9,18 +9,21 @@ if (Meteor.isServer) {
     // Only publish tasks that are public or belong to the current user
     Meteor.publish('discount.by.eventId', function discountByEventId(eventId) {
         check(eventId, String);
+
+        if (!this.userId) {
+            return this.ready();
+        }
+
         return Discount.find({eventId});
     });
 
     Meteor.publish('discountsList', function discountsList() {
+        if (!this.userId) {
+            return this.ready();
+        }
+
         return Discount.find();
     });
-
-    // Meteor.publish('discount.by.eventId.foodId', function discountByEventFoodId(eventId, foodId) {
-    //   check(eventId, String);
-    //   check(foodId, String);
-    //   return Discount.findOne({eventId, foodId});
-    // });
 }
 
 Meteor.methods({
@@ -29,7 +32,6 @@ Meteor.methods({
         check(foodId, String);
         check(eventId, String);
 
-        // Make sure the user is logged in before inserting a task
         if (!Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }

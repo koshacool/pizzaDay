@@ -20,7 +20,7 @@ class Food extends Component {
         this.state = {
             itemName: '',
             price: '',
-            
+
         };
     }
 
@@ -51,12 +51,12 @@ class Food extends Component {
 
         return menuItems
             .map((item) => (
-                <MenuItem key={item._id} menuItem={item} 
-                            event={this.props.event} 
-                            order={this.props.order}
-                            onSelect={this.props.onSelect}
-                            discounts={this.props.discounts}
-                          />
+                <MenuItem key={item._id} menuItem={item}
+                          event={this.props.event}
+                          order={this.props.order}
+                          onSelect={this.props.onSelect}
+                          discounts={this.props.discounts}
+                />
             ));
     }
 
@@ -111,15 +111,14 @@ class Food extends Component {
                             {this.renderMenu()}
                         </ul>
                     </div>
-                        
-                    
+
+
                 </div>
             </div>
         );
     }
 
-}
-;
+};
 
 Food.propTypes = {
     event: PropTypes.object.isRequired,
@@ -127,16 +126,17 @@ Food.propTypes = {
     discounts: PropTypes.array.isRequired,
     order: PropTypes.bool,
     currentUser: PropTypes.object,
-    
+
 };
 
-export default createContainer((params) => {    
+export default createContainer((params) => {
     function getEventId(params) {
         if (params.event) {
             return params.event._id;
         }
         return params.params.event;
-    } 
+    }
+
     Meteor.subscribe('menu');
     Meteor.subscribe('events');
     Meteor.subscribe('discount.by.eventId', getEventId(params));

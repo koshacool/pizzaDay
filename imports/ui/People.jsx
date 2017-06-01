@@ -9,13 +9,12 @@ import Group from './Components/Group.jsx';
 import EditGroup from './ModalWindows/EditGroup.jsx';
 import Groups from './ModalWindows/Groups.jsx';
 import FormForName from './ModalWindows/FormForName.jsx';
-//import {ShowWindow, HideWindow} from './Helper/ModalWindowBase.jsx';
 
 
-// App component - represents the whole app
 class People extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             modal: '',
             event: this.props.event,
@@ -123,31 +122,31 @@ class People extends Component {
 
             <div className="contentBLock">
                 {existUsers ?
-                    <div>
-                <div className="buttons">
-                    <button onClick={this.showFormCreateGroup.bind(this)}>
-                        Great Group
-                    </button>
+                <div>
+                    <div className="buttons">
+                        <button onClick={this.showFormCreateGroup.bind(this)}>
+                            Great Group
+                        </button>
 
-                    <button onClick={this.showGroups.bind(this)}>
-                        Add Group
-                    </button>
+                        <button onClick={this.showGroups.bind(this)}>
+                            Add Group
+                        </button>
+                    </div>
+                    <ul>{this.renderUsers()}</ul>
+                    <div>{this.state.modal}</div>
                 </div>
-                <ul>{this.renderUsers()}</ul>
-                <div>{this.state.modal}</div>
-                </div>
-                :
-                    <center>'You are only one registered user!'</center>
-                }
+                    :
+                <center>'You are only one registered user!'</center>
+                    }
             </div>
         );
     }
-};
+}
+;
 
 People.propTypes = {
     users: PropTypes.array.isRequired,
     event: PropTypes.object.isRequired,
-    // incompleteCount: PropTypes.number.isRequired,
     groups: PropTypes.object,
 };
 
@@ -158,7 +157,6 @@ export default createContainer(function (params) {
     return {
         users: Meteor.users.find().fetch(),
         event: Events.findOne(params.params.event),
-        // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
         groups: Meteor.user().groups,
     };
 }, People);

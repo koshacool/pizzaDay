@@ -8,7 +8,7 @@ import {Discount} from '../api/discount.js';
 import Event from './Components/Event.jsx';
 import Header from './Elements/Header.jsx';
 
-// App component - represents the whole app
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -42,7 +42,6 @@ class App extends Component {
         }
 
         return (
-            
               <div>
                 <label className="hideCompleted">
                     <input type="checkbox" onChange={this.toggleHideCompleted}/> 
@@ -53,7 +52,6 @@ class App extends Component {
                 ))}
              </div>
         )
-       
     }
 
     render() {        
@@ -77,7 +75,6 @@ class App extends Component {
 
 App.propTypes = {
     events: PropTypes.array.isRequired,
-    // incompleteCount: PropTypes.number.isRequired,
     currentUser: PropTypes.object,
     discounts: PropTypes.array,
 };
@@ -92,7 +89,6 @@ export default createContainer(() => {
                     {['available.users.' + Meteor.userId() + '.status']: true}]
             },
             {sort: {createdAt: -1}}).fetch(),
-        // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user(),
         discounts: Discount.find().fetch(),
     };

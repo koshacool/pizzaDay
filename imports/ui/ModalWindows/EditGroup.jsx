@@ -70,8 +70,6 @@ export default class EditGroup extends Component {
 };
 
 EditGroup.propTypes = {
-    // This component gets the task to display through a React prop.
-    // We can use propTypes to indicate it is required
     hideModalWindow: PropTypes.func.isRequired,
     changeName: PropTypes.func.isRequired,
     groupName: PropTypes.string.isRequired,

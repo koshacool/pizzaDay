@@ -2,12 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import {Link} from 'react-router';
-
-
 import ModalWindowBase from './ModalWindowBase.jsx';
 
-
-// App component - represents the whole app
 export default class DiscountModal extends Component {
     constructor(props) {
         super(props);

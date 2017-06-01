@@ -7,8 +7,6 @@ import Group from '../Components/Group.jsx';
 import ModalWindowBase from './ModalWindowBase.jsx';
 import EditGroup from './EditGroup.jsx';
 
-
-// App component - represents the whole app
 class Groups extends Component {
     constructor(props) {
         super(props);

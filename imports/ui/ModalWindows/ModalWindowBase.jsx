@@ -3,8 +3,6 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import {Link} from 'react-router';
 
-
-// App component - represents the whole app
 export default class ModalWindowBase extends Component {
     constructor(props) {
         super(props);
