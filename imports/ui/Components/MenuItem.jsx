@@ -5,7 +5,6 @@ import { Events } from '../../api/events.js';
 import { Discount } from '../../api/discount.js';
 import DiscountModal from '../ModalWindows/DiscountModal.js';
 
-
 export default class MenuItem extends Component {
     constructor(props) {
         super(props);
@@ -17,8 +16,6 @@ export default class MenuItem extends Component {
             number: this.countNumber(),     
             modal: '',       
         };
-
-
     }
 
     handleInputChange(event) {
@@ -76,7 +73,6 @@ export default class MenuItem extends Component {
     countOrder(e) {
         this.handleInputChange(e)
         .then(() => this.toggleOrdered());
-
     }
 
     checkAvailable() {
@@ -217,12 +213,7 @@ export default class MenuItem extends Component {
 }
 
 MenuItem.propTypes = {
-    // This component gets the task to display through a React prop.
-    // We can use propTypes to indicate it is required
     menuItem: PropTypes.object.isRequired,
     event: PropTypes.object.isRequired,
-    discounts: PropTypes.array
-
-
-    // showPrivateButton: React.PropTypes.bool.isRequired,
+    discounts: PropTypes.array,
 };

@@ -8,7 +8,7 @@ import {Discount} from '../api/discount.js';
 import Event from './Components/Event.jsx';
 import Header from './Elements/Header.jsx';
 
-// App component - represents the whole app
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -42,42 +42,45 @@ class App extends Component {
         }
 
         return (
-            
-              <div>
+
+            <div>
                 <label className="hideCompleted">
-                    <input type="checkbox" onChange={this.toggleHideCompleted}/> 
+                    <input type="checkbox" onChange={this.toggleHideCompleted}/>
                     hide completed
                 </label>
-                {events.map((event) => (          
-                    <Event key={event._id} event={event} discounts={this.getDiscountsForEvent(event._id)} />
-                ))}
-             </div>
+                { events.length > 0 ?
+                    events.map((event) => (
+                        <Event key={event._id} event={event} discounts={this.getDiscountsForEvent(event._id)}/>
+                    ))
+                    :
+                    <center>You don't have any events!</center>
+                }
+            </div>
         )
-       
     }
 
-    render() {        
+    render() {
         return (
             <div className="container">
                 <Header />
 
                 <div className="container">
                     <div className="contentBLock">
-                       {/*Check user authorizated*/}
+                        {/*Check user authorizated*/}
                         { this.props.currentUser ?
                             this.props.children ? this.props.children : this.renderEvents()
                             : ''
-                        }
+                            }
                     </div>
                 </div>
             </div>
         )
     }
-};
+}
+;
 
 App.propTypes = {
     events: PropTypes.array.isRequired,
-    // incompleteCount: PropTypes.number.isRequired,
     currentUser: PropTypes.object,
     discounts: PropTypes.array,
 };
@@ -92,7 +95,6 @@ export default createContainer(() => {
                     {['available.users.' + Meteor.userId() + '.status']: true}]
             },
             {sort: {createdAt: -1}}).fetch(),
-        // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user(),
         discounts: Discount.find().fetch(),
     };

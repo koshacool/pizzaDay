@@ -8,12 +8,11 @@ import { Events } from '../api/events.js';
 import { Menu } from '../api/menu.js';
 import Food from './Food.jsx';
 import People from './People.jsx';
-//import Header from './Header.jsx';
 
-// App component - represents the whole app
 class EventNew extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             eventName: '',
             date: '',
@@ -29,7 +28,7 @@ class EventNew extends Component {
             throw new Meteor.Error('Empty value');
         }
 
-        Meteor.call('events.insert', this.state.eventName, this.state.date, this.state.time,(err, result) => {
+        Meteor.call('events.insert', this.state.eventName, this.state.date, this.state.time, (err, result) => {
             browserHistory.push('/event/' + result._id); //Redirect to page for edit event
         });
     }
@@ -85,8 +84,7 @@ class EventNew extends Component {
             </div>
         );
     }
-}
-;
+};
 
 EventNew.propTypes = {
     currentUser: PropTypes.object,

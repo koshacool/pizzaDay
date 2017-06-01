@@ -36,7 +36,6 @@ class Event extends Component {
         return detailedPrice;
     }
 
-
     sendPriceToUsers() {
         let {event, discounts} = this.props;
         let users = this.getAvailableUsers(event.available.users);
@@ -160,14 +159,9 @@ class Event extends Component {
 }
 
 Event.propTypes = {
-    // This component gets the task to display through a React prop.
-    // We can use propTypes to indicate it is required
     event: PropTypes.object.isRequired,
     users: PropTypes.array.isRequired,
     discounts: PropTypes.array.isRequired,
-    // usersCount: PropTypes.number.isRequired,
-    // event: PropTypes.string.isRequired,
-    // showPrivateButton: React.PropTypes.bool.isRequired,
 };
 
 export default createContainer(() => {

@@ -4,7 +4,6 @@ import classnames from 'classnames';
 import {createContainer} from 'meteor/react-meteor-data';
 import {Events} from '../../api/events.js';
 
-// Task component - represents a single todo item
 export default class Group extends Component {
     constructor(props) {
         super(props);
@@ -12,7 +11,6 @@ export default class Group extends Component {
 
         this.state = {
             added: this.checkAdded(),
-
         };
     }
 
@@ -47,7 +45,6 @@ export default class Group extends Component {
     countAddedUsers() {
         return Object.keys(this.props.group).filter((value) => this.props.group[value]).length;
     }
-
 
     render() {
         const taskClassName = classnames({
@@ -84,12 +81,8 @@ export default class Group extends Component {
 }
 
 Group.propTypes = {
-    // This component gets the task to display through a React prop.
-    // We can use propTypes to indicate it is required
     group: PropTypes.object.isRequired,
     event: PropTypes.object.isRequired,
     name: PropTypes.string,
     edit: PropTypes.func,
-
-    // showPrivateButton: React.PropTypes.bool.isRequired,
 };

@@ -12,19 +12,16 @@ import Food from './Food.jsx';
 import People from './People.jsx';
 import {Discount} from '../api/discount.js';
 
-
-
-// App component - represents the whole app
 class Order extends Component {
     constructor(props) {
         super(props);
 
-        this.setStatusOrdered = this.setStatusOrdered.bind(this);
+        this.setStatusOrdered     = this.setStatusOrdered.bind(this);
         this.checkAllUsersOrdered = Helper.checkAllUsersOrdered.bind(this);
-        this.countUserTotalPrice = Helper.countUserTotalPrice.bind(this);
-        this.countAllPrice = Helper.countAllPrice.bind(this);
-        this.getAvailableUsers = Helper.getAvailableUsers.bind(this);
-        
+        this.countUserTotalPrice  = Helper.countUserTotalPrice.bind(this);
+        this.countAllPrice        = Helper.countAllPrice.bind(this);
+        this.getAvailableUsers    = Helper.getAvailableUsers.bind(this);
+
         this.state = {
             totalPrice: this.countUserTotalPrice(),
             gettedDiscounts: false,
@@ -62,25 +59,26 @@ class Order extends Component {
         return (<Food event={this.props.event}
                       order={true}
                       onSelect={ this.changePrice.bind(this) }
-                />
+            />
         );
     }
 
-    componentWillReceiveProps(nextProps) {        
-            this.setState({
-                totalPrice: this.countUserTotalPrice(nextProps.discounts),
-            });        
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            totalPrice: this.countUserTotalPrice(nextProps.discounts),
+        });
     }
 
 
     render() {
-
         return (
             <div className="container">
                 { this.props.event ?
                 <div className="contentBLock">
-                    <button onClick={this.setStatusOrdered}> Confirm </button>
-                    <div>Your price: {this.state.totalPrice.price.toFixed(2)} grn.(Discount: {this.state.totalPrice.totalDiscount.toFixed(2) })</div>
+                    <button onClick={this.setStatusOrdered}> Confirm</button>
+                    <div>Your price: {this.state.totalPrice.price.toFixed(2)}
+                        grn.(Discount: {this.state.totalPrice.totalDiscount.toFixed(2) })
+                    </div>
                     <div>
                         {this.showFood()}
                     </div>
@@ -101,11 +99,11 @@ export default createContainer((params) => {
     Meteor.subscribe('discount.by.eventId', params.params.event);
     Meteor.subscribe('events');
     Meteor.subscribe('menu');
-    Meteor.subscribe('usersList');    
+    Meteor.subscribe('usersList');
 
     return {
         discounts: Discount.find().fetch(),
         event: Events.findOne(params.params.event),
-        
+
     };
 }, Order);

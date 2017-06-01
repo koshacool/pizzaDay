@@ -11,8 +11,6 @@ import Food from './Food.jsx';
 import People from './People.jsx';
 import FormForName from './ModalWindows/FormForName.jsx';
 
-
-// App component - represents the whole app
 class EventEdit extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +25,7 @@ class EventEdit extends Component {
 
     changeName(evt) {
         evt.preventDefault();
-        Meteor.call('events.changeName', this.props.event._id, evt.target[0].value,  (err, result) => {
+        Meteor.call('events.changeName', this.props.event._id, evt.target[0].value, (err, result) => {
             this.hideModalWindow(); //hide modal window
         });
     }
@@ -44,9 +42,9 @@ class EventEdit extends Component {
     }
 
     renderEditEvent() {
-       return (
-           <div className="container">
-            { this.props.currentUser._id === this.props.event.owner._id ?
+        return (
+            <div className="container">
+                { this.props.currentUser._id === this.props.event.owner._id ?
                 <div className="contentBLock">
                     <div className="buttons">
                         <h2>
@@ -74,21 +72,20 @@ class EventEdit extends Component {
                         { this.props.children }
                     </div>
                 </div>
-                : <strong>You haven't permission to edit this event!</strong>
-            }
-            {this.state.modal}
-        </div>
-       )
+                    : <strong>You haven't permission to edit this event!</strong>
+                    }
+                {this.state.modal}
+            </div>
+        )
     }
 
     render() {
-
         return (
             <div>
-            { this.props.event ?
-                this.renderEditEvent()
-                : 'Bad id. Such event doesn\'t exist!'
-            }
+                { this.props.event ?
+                    this.renderEditEvent()
+                    : 'Bad id. Such event doesn\'t exist!'
+                    }
             </div>
         );
     }
@@ -96,20 +93,16 @@ class EventEdit extends Component {
 
 EventEdit.propTypes = {
     event: PropTypes.object,
-    // incompleteCount: PropTypes.number.isRequired,
     currentUser: PropTypes.object,
-    // countUsers: PropTypes.number.isRequired,
 };
 
 export default createContainer((params) => {
     Meteor.subscribe('events');
     Meteor.subscribe('menu');
     Meteor.subscribe('usersList');
-    // console.log(params);
+
     return {
-        // countUsers: Meteor.users.find().count(),
         event: Events.findOne(params.params.event),
-        // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user(),
     };
 }, EventEdit);

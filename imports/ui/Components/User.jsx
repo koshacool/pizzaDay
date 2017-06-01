@@ -8,7 +8,6 @@ import {Events} from '../../api/events.js';
 export default class User extends Component {
     constructor(props) {
         super(props);
-        // Meteor.subscribe('events');
 
         this.state = {
             available: this.checkAvailable(),
@@ -63,8 +62,6 @@ export default class User extends Component {
         });
     }
 
-
-
     showUserForEvent() {
         const taskClassName = classnames({
             unavailable: !this.state.available,
@@ -73,19 +70,19 @@ export default class User extends Component {
         return (
             <div>
                 { this.props.user._id != Meteor.userId() ?
-                    <li className={taskClassName}>
-                        <button
-                            className="toggle-private"
-                            onClick={ this.toggleAvailable.bind(this) }
-                        >
-                            { this.state.available ? 'UnAvailable' : 'Available' }
-                        </button>
-                        <div className='text'>
-                            <strong> { this.props.user.profile.name } </strong>
-                        </div>
-                    </li>
+                <li className={taskClassName}>
+                    <button
+                        className="toggle-private"
+                        onClick={ this.toggleAvailable.bind(this) }
+                    >
+                        { this.state.available ? 'UnAvailable' : 'Available' }
+                    </button>
+                    <div className='text'>
+                        <strong> { this.props.user.profile.name } </strong>
+                    </div>
+                </li>
                     : ''
-                }
+                    }
             </div>
         )
     }
@@ -98,25 +95,24 @@ export default class User extends Component {
         return (
             <div>
                 { this.props.user._id != Meteor.userId() ?
-                    <li className={taskClassName}>
-                        <button
-                            className="toggle-private"
-                            onClick={ this.addToGroup.bind(this) }
-                        >
-                            { this.state.available ? 'Remove' : 'Add' }
-                        </button>
-                        <div className='text'>
-                            <strong> { this.props.user.profile.name } </strong>
-                        </div>
-                    </li>
+                <li className={taskClassName}>
+                    <button
+                        className="toggle-private"
+                        onClick={ this.addToGroup.bind(this) }
+                    >
+                        { this.state.available ? 'Remove' : 'Add' }
+                    </button>
+                    <div className='text'>
+                        <strong> { this.props.user.profile.name } </strong>
+                    </div>
+                </li>
                     : ''
-                }
+                    }
             </div>
         )
     }
 
     render() {
-        //console.log(this.props.user)
         return (
             <div>
                 {this.props.groupName ? this.showUserForGroup() : this.showUserForEvent()}
@@ -126,9 +122,6 @@ export default class User extends Component {
 }
 
 User.propTypes = {
-    // This component gets the task to display through a React prop.
-    // We can use propTypes to indicate it is required
     user: PropTypes.object.isRequired,
     event: PropTypes.object,
-    // showPrivateButton: React.PropTypes.bool.isRequired,
 };
