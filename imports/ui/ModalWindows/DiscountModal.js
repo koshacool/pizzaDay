@@ -29,8 +29,8 @@ export default class DiscountModal extends Component {
                 method="post"
                 onSubmit={ this.props.formSubmit }
             >
-                Discount(grn.): 
-                <input type="number" required value={this.state.inputValue} onChange={this.handleInputChange.bind(this)}/>
+                Discount(grn.):
+                <input type="text" pattern="^\d+(?:[\.]\d{1,2})?$" required value={this.state.inputValue} onChange={this.handleInputChange.bind(this)}/>
                 <button type="submit"> ADD </button>
                 <button type="button" onClick={this.props.hideModalWindow}> CANCEL </button>
             </form>

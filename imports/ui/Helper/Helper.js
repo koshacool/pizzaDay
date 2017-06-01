@@ -51,20 +51,52 @@ export const Helper = {
         })
     },
 
-    countUserTotalPrice(event, userId) {
-        var price = 0;
+    //countUserTotalPrice(event, userId) {
+    //    var price = 0;
+    //    let userOrder = event.orders[userId];
+    //
+    //    if (userOrder) {
+    //        for (var menuId in userOrder.order) {
+    //            if (userOrder.order[menuId].status) {
+    //                let menuObj = Menu.findOne(menuId);
+    //                price += menuObj.price * userOrder.order[menuId].number;
+    //            }
+    //        }
+    //    }
+    //
+    //    return price;
+    //},
+
+    countUserTotalPrice(discounts = false, userId = false) {
+        if (!discounts) {
+            discounts = this.props.discounts || [];
+        }
+        const {event} = this.props;
+        userId =  Meteor.userId() || userId;
+        let price = 0;
+        let totalDiscount = 0;
         let userOrder = event.orders[userId];
 
         if (userOrder) {
             for (var menuId in userOrder.order) {
                 if (userOrder.order[menuId].status) {
                     let menuObj = Menu.findOne(menuId);
-                    price += menuObj.price * userOrder.order[menuId].number;
+
+                    let discount = discounts.filter((discount) => {
+                        return discount.foodId === menuId;
+                    })
+
+                    if (discount.length > 0) {
+                        price += (menuObj.price - discount[0].discount) * userOrder.order[menuId].number;
+                        totalDiscount += +discount[0].discount * userOrder.order[menuId].number;
+                    } else {
+                        price += menuObj.price * userOrder.order[menuId].number;
+                    }
                 }
             }
         }
 
-        return price;
+        return {price, totalDiscount};
     },
 
     getUserOrderNames(event, userId) {        
@@ -92,9 +124,13 @@ export const Helper = {
 
     countAllPrice(event) {
         availableUsers = this.getAvailableUsers(event.available.users);
-        return availableUsers.reduce((prev, userId) =>
-                prev + this.countUserTotalPrice(event, userId)
-             , 0).toFixed(2);
+        return availableUsers.reduce((prev, userId) => {
+                let userPrice = this.countUserTotalPrice();
+                prev.price += userPrice.price;
+                prev.discount += userPrice.totalDiscount;
+
+                return prev;
+        }, {price: 0, discount: 0});
     }
 
 };

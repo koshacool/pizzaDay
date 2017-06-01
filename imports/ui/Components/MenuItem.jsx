@@ -167,7 +167,7 @@ export default class MenuItem extends Component {
                 }
 
 		<span className="text">
-		  <strong>{this.props.menuItem.text}</strong>: {this.countPriceWithDiscount()} grn.
+		  <strong>{this.props.menuItem.text}</strong>: {this.countPriceWithDiscount().toFixed(2)} grn. (discount: {this.getDiscount()} grn.)
 		</span>
             <div>{this.state.modal}</div>
             </li>
@@ -199,7 +199,7 @@ export default class MenuItem extends Component {
 		
 
 		<span className="text">
-		  <strong>{this.props.menuItem.text}</strong>: {this.countPriceWithDiscount()} grn. (discount: {this.getDiscount()} grn.)
+		  <strong>{this.props.menuItem.text}</strong>: {this.countPriceWithDiscount().toFixed(2)} grn. (discount: {this.getDiscount()} grn.)
 		</span>
             </li>
         );

@@ -21,7 +21,7 @@ class Order extends Component {
 
         this.setStatusOrdered = this.setStatusOrdered.bind(this);
         this.checkAllUsersOrdered = Helper.checkAllUsersOrdered.bind(this);
-        this.countUserTotalPrice = this.countUserTotalPrice.bind(this);
+        this.countUserTotalPrice = Helper.countUserTotalPrice.bind(this);
         this.countAllPrice = Helper.countAllPrice.bind(this);
         this.getAvailableUsers = Helper.getAvailableUsers.bind(this);
         
@@ -30,37 +30,6 @@ class Order extends Component {
             gettedDiscounts: false,
         };
     }
-
-    countUserTotalPrice(discounts = false) {
-        if (!discounts) {
-            discounts = this.props.discounts;
-        }
-        const {event} = this.props;
-        const userId =  Meteor.userId();
-        let price = 0;
-        let userOrder = event.orders[userId];
-        
-        if (userOrder) {
-            for (var menuId in userOrder.order) {
-                if (userOrder.order[menuId].status) {
-                    let menuObj = Menu.findOne(menuId);
-
-                    let discount = discounts.filter((discount) => {
-                        return discount.foodId === menuId;
-                    })
-
-                    if (discount.length > 0) {
-                        price += (menuObj.price - discount[0].discount) * userOrder.order[menuId].number;                       
-                    } else {
-                        price += menuObj.price * userOrder.order[menuId].number;
-                    }   
-                }
-            }
-        }
-
-        return price;
-    }
-
 
     changePrice() {
         this.setState({
@@ -73,12 +42,13 @@ class Order extends Component {
         Meteor.call('events.userOrderStatus', this.props.event._id, 'ordered', (err, result) => {
             if (this.checkAllUsersOrdered(this.props.event)) {
                 Meteor.call('events.orderStatus', this.props.event._id, 'ordered', (err, result) => {
+                    let totalPrice = this.countAllPrice(event);
                     Meteor.call(
                         'sendEmail',
                         this.props.event.owner.email,
                         'PizzaDAY@exapmle.com',
                         'PizzaDAY: ' + this.props.event.text,
-                        'All people ordered! Total Price: ' + this.countAllPrice(event),
+                        `All people ordered! Total Price: ${totalPrice.price.toFixed(2)}, Total Discount: ${totalPrice.discount.toFixed(2)}`,
                     );
                     browserHistory.push('/');
                 })
@@ -104,13 +74,13 @@ class Order extends Component {
 
 
     render() {
-        
+
         return (
             <div className="container">
                 { this.props.event ?
                 <div className="contentBLock">
                     <button onClick={this.setStatusOrdered}> Confirm </button>
-                    <div>Your price: {this.state.totalPrice.toFixed(2)} grn.</div>
+                    <div>Your price: {this.state.totalPrice.price.toFixed(2)} grn.(Discount: {this.state.totalPrice.totalDiscount.toFixed(2) })</div>
                     <div>
                         {this.showFood()}
                     </div>
@@ -122,7 +92,7 @@ class Order extends Component {
 };
 
 Order.propTypes = {
-    event: PropTypes.object.isRequired,
+    event: PropTypes.object,
     discounts: PropTypes.array.isRequired,
 };
 

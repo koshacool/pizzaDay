@@ -4,6 +4,7 @@ import {Meteor} from 'meteor/meteor';
 import {createContainer} from 'meteor/react-meteor-data';
 
 import {Events} from '../api/events.js';
+import {Discount} from '../api/discount.js';
 import Event from './Components/Event.jsx';
 import Header from './Elements/Header.jsx';
 
@@ -27,6 +28,11 @@ class App extends Component {
         });
     }
 
+    getDiscountsForEvent(eventId) {
+        let {discounts} = this.props;
+        return discounts.filter((discount) => discount.eventId === eventId);
+    }
+
     renderEvents() {
         let {events} = this.props;
         let {hideCompleted} = this.state;
@@ -43,7 +49,7 @@ class App extends Component {
                     hide completed
                 </label>
                 {events.map((event) => (          
-                    <Event key={event._id} event={event} />
+                    <Event key={event._id} event={event} discounts={this.getDiscountsForEvent(event._id)} />
                 ))}
              </div>
         )
@@ -73,10 +79,12 @@ App.propTypes = {
     events: PropTypes.array.isRequired,
     // incompleteCount: PropTypes.number.isRequired,
     currentUser: PropTypes.object,
+    discounts: PropTypes.array,
 };
 
 export default createContainer(() => {
     Meteor.subscribe('events');
+    Meteor.subscribe('discountsList');
     return {
         events: Events.find({
                 $or: [
@@ -86,5 +94,6 @@ export default createContainer(() => {
             {sort: {createdAt: -1}}).fetch(),
         // incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user(),
+        discounts: Discount.find().fetch(),
     };
 }, App);
